@@ -70,7 +70,7 @@ public class Shelf: MonoBehaviour
         StorePlant(plant, spot);
     }
 
-    private bool SlotHasPlant(Transform slot)
+    private bool SlotHasPlant(Transform slot) // this should change later!
     {
         for (int i = 0; i < slot.childCount; i++)
         {
