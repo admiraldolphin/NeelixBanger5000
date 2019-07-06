@@ -61,4 +61,34 @@ public class Plant: MonoBehaviour
         }
         return changes.ToArray();
     }
+    
+    public PlantDecalSet plantDecalSet;
+
+    private void Awake() {
+
+        if (plantDecalSet == null) {
+            return;
+        }
+
+        // TODO: choose a decal object based on input from elsewhere, not here
+
+        var set = Random.Range(0,2) == 0 ? plantDecalSet.flowers : plantDecalSet.fruits;
+
+        var decal = set[Random.Range(0, set.Length)];
+
+        var decalColor = Random.ColorHSV(0,1,0.8f,0.9f, 0.8f, 1f);
+        var mainColor = Random.ColorHSV(0,1,0.8f,0.9f, 0.8f, 1f);
+
+        foreach (var renderer in this.GetComponentsInChildren<MeshRenderer>()) {
+            renderer.material.color = mainColor;
+        }
+
+        foreach (var spawner in GetComponentsInChildren<DecalObjectSpawner>()) {
+            spawner.SpawnObject(decal, decalColor);
+        }
+
+        this.transform.rotation = Quaternion.Euler(-90,Random.Range(0,360),0);
+
+        
+    }
 }
