@@ -5,7 +5,6 @@ using UnityEngine;
 public class Kes: MonoBehaviour
 {
     public float movementSpeed = 1;
-    public float jumpSpeed = 1;
     public float gravity = 20;
     public float grabDistance = 2;
     public Transform arms;
@@ -37,11 +36,6 @@ public class Kes: MonoBehaviour
         {
             moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
             moveDirection *= movementSpeed;
-
-            if (Input.GetButton("Jump"))
-            {
-                moveDirection.y = jumpSpeed;
-            }
         }
 
         // Apply gravity. Gravity is multiplied by deltaTime twice (once here, and once below
@@ -54,32 +48,71 @@ public class Kes: MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (plant == null)
+            Ray laser = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(laser, out hit, grabDistance))
             {
-                Ray laser = Camera.main.ScreenPointToRay(Input.mousePosition);
-                Debug.DrawRay(laser.origin, laser.direction, Color.red, 50);
-                RaycastHit hit;
-                if (Physics.Raycast(laser, out hit, grabDistance))
+                Debug.Log($"{hit.collider.tag}:{hit.collider.name}");
+                switch (hit.collider.tag)
                 {
-                    if (hit.collider.tag == "Plant")
-                    {
+                    case "Plant":
                         if (plant == null)
                         {
-                            hit.transform.position = arms.position;
-                            hit.transform.parent = arms;
-                            hit.transform.GetComponent<Rigidbody>().isKinematic = true;
-
-                            plant = hit.transform;
+                            PickUpPlant(hit);
                         }
-                    }
+                        else
+                        {
+                            DropPlant();
+                        }
+                        break;
+                    
+                    case "Shelf":
+                        var shelf = hit.transform.GetComponent<Shelf>();
+                        if (plant != null)
+                        {
+                            plant.parent = null;
+                            shelf.PlacePlant(plant);
+                            plant = null;
+                        }
+                        break;
+                    
+                    case "Slot":
+                        if (plant != null) // we want to put the plant on that slot
+                        {
+                            plant.parent = null;
+                            hit.transform.parent.GetComponent<Shelf>().PlacePlant(plant, hit.transform);
+                            plant = null;
+                        }
+                        break;
+
+                    default:
+                        Debug.Log("shitballs");
+                        break;
                 }
             }
             else
             {
-                plant.GetComponent<Rigidbody>().isKinematic = false;
-                plant.parent = null;
-                plant = null;
+                DropPlant();
             }
+        }
+    }
+
+    private void PickUpPlant(RaycastHit hit)
+    {
+        hit.transform.position = arms.position;
+        hit.transform.parent = null;
+        hit.transform.parent = arms;
+        hit.transform.GetComponent<Rigidbody>().isKinematic = true;
+
+        plant = hit.transform;
+    }
+    private void DropPlant()
+    {
+        if (plant != null)
+        {
+            plant.GetComponent<Rigidbody>().isKinematic = false;
+            plant.parent = null;
+            plant = null;
         }
     }
 }

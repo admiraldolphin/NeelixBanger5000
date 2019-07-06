@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Plant
+  - Shelf
+  - Slot
   layers:
   - Default
   - TransparentFX
