@@ -70,15 +70,12 @@ public class Kes: MonoBehaviour
                         }
                         break;
                     
-                    // case "Shelf":
-                    //     PlacePlantOnShelf(hit);
-                    //     break;
+                    case "Shelf":
+                        PlacePlantOnShelf(hit);
+                        break;
                     
                     case "Slot":
-                        if (holding != null) // we want to put the plant on that slot
-                        {
-                            PlacePlantOnSlot(hit);
-                        }
+                        PlacePlantOnSlot(hit);
                         break;
 
                     default:
@@ -119,15 +116,18 @@ public class Kes: MonoBehaviour
     }
     private void PlacePlantOnShelf(RaycastHit hit)
     {
-        var shelf = hit.transform.GetComponent<Shelf>();
         if (holding != null)
         {
+            var shelf = hit.transform.GetComponent<Shelf>();
             var plant = holding.GetComponent<Plant>();
-            holding.parent = null;
-            shelf.PlacePlant(holding);
-            holding = null;
+            
+            var slot = shelf.AvailableSpot(holding);
+            if (levelGod.PlacePlant(slot, plant.index))
+            {
+                shelf.PlacePlant(holding, slot);
 
-            //levelGod.PlacePlant(0, plant.index);
+                holding = null;
+            }
         }
     }
     private void PlacePlantOnSlot(RaycastHit hit)
@@ -135,12 +135,15 @@ public class Kes: MonoBehaviour
         if (holding != null) // we want to put the plant on that slot
         {
             var plant = holding.GetComponent<Plant>();
-            holding.parent = null;
-            hit.transform.parent.GetComponent<Shelf>().PlacePlant(holding, hit.transform);
             var slot = hit.transform.GetComponent<Slot>();
 
-            levelGod.PlacePlant(slot, plant.index);
-            holding = null;
+            if (levelGod.PlacePlant(slot, plant.index))
+            {
+                holding.parent = null;
+                hit.transform.parent.GetComponent<Shelf>().PlacePlant(holding, slot);
+
+                holding = null;
+            }
         }
     }
 }

@@ -57,22 +57,18 @@ public class LevelGod : MonoBehaviour
             Change[] result = null;
             if (change.group == ChangeGroup.plant)
             {
-                Debug.Log($"Performing a change on plant {change.toIndex}");
                 result = plants[change.toIndex].ProcessChange(change);
             }
             else
             {
-                Debug.Log($"Performing a change on slot {change.toIndex}");
                 result = slots[change.toIndex].ProcessChange(change);
             }
 
             if (result != null && result.Length > 0)
             {
-                Debug.Log($"There are {result.Length} precolating results");
                 FlagChanges(result);
             }
             changeList.RemoveAt(0);
-            Debug.Log($"There are {changeList.Count} changes remaining");
         }
         changeList.Clear();// in theory they are all gone by now but it never hurts to make sure
     }
@@ -136,11 +132,16 @@ public class LevelGod : MonoBehaviour
 
         Destroy(plant);
     }
-    public void PlacePlant(Slot slot, int plant)
+    public bool PlacePlant(Slot slot, int plant)
     {
+        if (slot.plant != -1)
+        {
+            return false;
+        }
         slot.plant = plant;
         Debug.Log("Placed plants");
         PlantedChanges(slot);
+        return true;
     }
     public void DropPlant(int plant)
     {

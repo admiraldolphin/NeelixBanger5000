@@ -12,6 +12,14 @@ public class Slot : MonoBehaviour
     public Soil soil = Soil.dirt;
     public Temperature temperature = Temperature.moderate;
 
+    public bool hasPlant
+    {
+        get
+        {
+            return plant != -1;
+        }
+    }
+
     public Change[] ProcessChange(Change change)
     {
         List<Change> changes = new List<Change>();

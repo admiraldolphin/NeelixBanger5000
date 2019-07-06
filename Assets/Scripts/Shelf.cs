@@ -4,81 +4,65 @@ using UnityEngine;
 
 public class Shelf: MonoBehaviour
 {
-    public List<Transform> slots;
+    public List<Slot> slots;
 
     void Start()
     {
-        slots = new List<Transform>();
+        slots = new List<Slot>();
+
         for (int i = 0; i < transform.childCount; i++)
         {
             Transform child = transform.GetChild(i);
             if (child.tag == "Slot")
             {
-                slots.Add(child);
+                var slot = child.GetComponent<Slot>();
+                slots.Add(slot);
             }
         }
     }
 
     // we pick where it goes on this one
-    public void PlacePlant(Transform plant)
+    // returns the slot that was selected
+    public Slot AvailableSpot(Transform plant)
     {
-        Transform slot = slots[0].transform;
+        Slot slot = slots[0];
         var closest = float.MaxValue;
 
-        foreach (var child in slots)
+        foreach (var point in slots)
         {
-            bool hasPlant = false;
-            for (int i = 0; i < child.childCount; i++)
+            if (!point.hasPlant)
             {
-                if (child.tag == "Plant")
-                {
-                    hasPlant = true;
-                    break;
-                }
-            }
-
-            if (!hasPlant)
-            {
-                var distance = Vector3.Distance(plant.position, child.position);
+                var distance = Vector3.Distance(plant.position, point.transform.position);
                 if (distance < closest)
                 {
-                    slot = child;
+                    slot = point;
                     closest = distance;
                 }
             }
         }
 
-        StorePlant(plant, slot);
+        return slot;
     }
 
-    private void StorePlant(Transform plant, Transform slot)
+    // this method assumes you have already checked you CAN store a plant here
+    private void StorePlant(Transform plant, Slot slot)
     {
-        if (!SlotHasPlant(slot))
-        {
-            var position = slot.position;
-            position.y += 0.5f;
-            plant.position = position;
-            plant.rotation = Quaternion.identity;
-            plant.parent = null;
-            plant.parent = slot.transform;
-        }
+        var position = slot.transform.position;
+        position.y += 0.5f;
+        plant.position = position;
+        plant.rotation = Quaternion.identity;
+        //plant.parent = null;
+        plant.SetParent(slot.transform,true);
+        Debug.Log($"parent: {plant.transform.parent.name}");
     }
 
     // we put it exactly where we clicked
-    public void PlacePlant(Transform plant, Transform spot)
+    public void PlacePlant(Transform plant, Slot spot)
     {
         StorePlant(plant, spot);
     }
 
-    private bool SlotHasPlant(Transform slot) // this should change later!
-    {
-        for (int i = 0; i < slot.childCount; i++)
-        {
-            if (slot.tag == "Plant")
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+    // need to make it so that shelves can change the properties of their slots properties
+    // basiclly we want a global "change the settings please" mode
+    // that can then be hooked up to the UI and we can show it as needed
 }
