@@ -69,18 +69,21 @@ public class Kes: MonoBehaviour
 
                         if (heldObject == HeldObject.soil)
                         {
+                            // animate/physics?
                             levelGod.ChangeSoil(slot);
                             heldObject = null;
                         }
                             
                         if (heldObject == HeldObject.nutrient)
                         {
+                            // animate/physics?
                             levelGod.FeedPlant(slot);
                             heldObject = null;
                         }
 
                         if (heldObject == HeldObject.plant)
                         {
+                            // animate/physics?
                             levelGod.PlacePlant(slot);
                             heldObject = null;
                         }
@@ -89,7 +92,7 @@ public class Kes: MonoBehaviour
                         {
                             if (slot.hasPlant)
                             {
-                                // pickup plant in this class/do the physics bit
+                                // animate/physics?
                                 levelGod.PickupPlant(slot);
                                 heldObject = HeldObject.plant;
                             }
@@ -99,8 +102,9 @@ public class Kes: MonoBehaviour
                     case "Nutrient":
                         if (heldObject == null)
                         {
-                            // get nutrient
-                            // levelGod.PickupNutrient(nutrientID);
+                            Nutrient nutrient = NutrientAtPosition(hit); 
+                            // animate/physics?
+                            levelGod.PickupNutrient(nutrient);
                             heldObject = HeldObject.nutrient;
                         }
                         break;
@@ -108,8 +112,9 @@ public class Kes: MonoBehaviour
                     case "Soil":
                         if (heldObject == null)
                         {
-                            // get soil
-                            // levelGod.PickupSoil(soilID);
+                            Soil soil = SoilAtPosition(hit); 
+                            // animate/physics?
+                            levelGod.PickupSoil(soil);
                             heldObject = HeldObject.soil;
                         }  
                         break;
