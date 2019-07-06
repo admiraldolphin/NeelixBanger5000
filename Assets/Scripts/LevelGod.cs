@@ -58,7 +58,7 @@ public class LevelGod : MonoBehaviour
             if (changedState)
             {
                 Debug.Log($"Plant {plant.index} has worsened");
-                // UpdateSprite(plant); // value asset brown/black as per state
+                // TODO: UpdateSprite(plant); // value asset brown/black as per state
             }
         }
     }
@@ -124,13 +124,12 @@ public class LevelGod : MonoBehaviour
             if (acceptedNutrient)
             {
                 Debug.Log($"Plant {plant.index} has been nourished.");
-                // UpdateSprite(plant); // value asset un-brown if was brown
-                // EmitHappyParticles(plant);
+                // TODO: UpdateSprite(plant); // value asset un-brown if was brown
             }
         }
 
         heldNutrientIndex = -1;
-        // disappear model to represent it being used up
+        // TODO: disappear model to represent it being used up
     }
 
     // activated plant-holding hand on workstation
@@ -138,7 +137,7 @@ public class LevelGod : MonoBehaviour
     {
         Plant plant = plants[heldPlantIndex];
         plant.DiscoverProperty()
-        // EmitHappyParticles(plant);
+        // TODO: Unhide a post-it asset;
     }
 
     // activated plant-holding hand on incinerator
@@ -170,6 +169,6 @@ public class LevelGod : MonoBehaviour
         plant.ChangeSoil(soil, slot);
 
         heldSoilIndex = -1;
-        // disappear model to represent it being used up
+        // TODO: disappear model to represent it being used up
     }
 }
