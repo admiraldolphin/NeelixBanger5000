@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Slot : MonoBehaviour
+public class Slot: MonoBehaviour
 {
     // the index of the plant occupying the slot
     public int plantIndex = -1;

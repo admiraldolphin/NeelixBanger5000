@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelGod : MonoBehaviour
+public class LevelGod: MonoBehaviour
 {
     const public float TICK_RATE = 2;
     const Array<Nutrient> NUTRIENTS = Enum.GetValues(typeof(Nutrient));

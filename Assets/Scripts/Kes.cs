@@ -100,22 +100,36 @@ public class Kes: MonoBehaviour
                         break;
 
                     case "Nutrient":
+                        Nutrient nutrient = NutrientAtPosition(hit); 
+
                         if (heldObject == null)
                         {
-                            Nutrient nutrient = NutrientAtPosition(hit); 
-                            // animate/physics?
+                            PickUpNutrient(nutrient);
                             levelGod.PickupNutrient(nutrient);
                             heldObject = HeldObject.nutrient;
+                        }
+
+                        if(heldObject == HeldObject.nutrient)
+                        {
+                            PutDownNutrient(nutrient);
+                            heldObject = null;
                         }
                         break;
 
                     case "Soil":
+                        Soil soil = SoilAtPosition(hit); 
+
                         if (heldObject == null)
                         {
-                            Soil soil = SoilAtPosition(hit); 
-                            // animate/physics?
+                            PickUpSoil(soil);
                             levelGod.PickupSoil(soil);
                             heldObject = HeldObject.soil;
+                        }  
+
+                        if (heldObject == HeldObject.soil)
+                        {
+                            PutDownSoil(soil);
+                            heldObject = null;
                         }  
                         break;
 
@@ -151,8 +165,10 @@ public class Kes: MonoBehaviour
     }
 
     //==================================================================================
-    private void PickUpPlantFromSlot(RaycastHit hit)
+    private void PickUpPlantFromSlot(Slot slot)
     {
+        // TODO: if plant is child of slot in the scene, then we don't need to ray hit plant to
+        // know which plant is in that slot. We can get just get slot.child?
         hit.transform.position = arms.position;
         hit.transform.parent = null;
         hit.transform.parent = arms;
@@ -163,18 +179,47 @@ public class Kes: MonoBehaviour
         holding = hit.transform;
     }
 
-    private void PlacePlantOnSlot(RaycastHit hit)
+    private void PlacePlantOnSlot(Slot slot)
     {
-        if (holding != null)
-        {
-            var plant = holding.GetComponent<Plant>();
-            holding.parent = null;
-            hit.transform.parent.GetComponent<Shelf>().PlacePlant(holding, hit.transform);
-            var slot = hit.transform.GetComponent<Slot>();
+        // TODO: if plant is child of slot in the scene, then we don't need to ray hit plant to
+        // know which plant is in that slot. We can get just get slot.child?
+        var plant = holding.GetComponent<Plant>();
+        holding.parent = null;
+        hit.transform.parent.GetComponent<Shelf>().PlacePlant(holding, hit.transform);
+        var slot = hit.transform.GetComponent<Slot>();
 
-            levelGod.PlacePlant(slot, plant.index);
-            holding = null;
-        }
+        levelGod.PlacePlant(slot, plant.index);
+        holding = null;
     }
+
+    // TODO: function to pickup nutrient or put it back in 1 single pre-defined spot
+    // else you either have to use it up on an occupied slot or carry it around
+    private void PickUpNutrient(Nutrient nutrient)
+    {
+        // just hide the sprite of that kind of nutrient in the scene
+        // appear another one in-hand
+    }
+
+    private void PutDownNutrient(RaycastHit hit)
+    {
+        // just un-hide the sprite of that kind of nutrient in the scene
+        // disappear the ther one in-hand    
+    }
+
+    // TODO: function to pickup soil or put it back in 1 single pre-defined spot
+    // else you either have to use it up on an occupied slot or carry it around
+
+    private void PickUpSoil(Soil soil)
+    {
+        // just hide the sprite of that kind of soil in the scene
+        // appear another one in-hand
+    }
+
+    private void PutDownSoil(Soil soil)
+    {
+        // just un-hide the sprite of that kind of soil in the scene
+        // disappear the ther one in-hand    
+    }
+
     //==================================================================================
 }
