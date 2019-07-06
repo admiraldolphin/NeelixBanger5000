@@ -53,7 +53,9 @@ public class Shelf: MonoBehaviour
 
     private void StorePlant(Transform plant, Transform slot)
     {
-        plant.position = slot.position;
+        var position = slot.position;
+        position.y += 0.5f;
+        plant.position = position;
         plant.parent = null;
         plant.parent = slot.transform;
     }

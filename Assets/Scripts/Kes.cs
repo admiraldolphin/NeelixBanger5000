@@ -52,7 +52,6 @@ public class Kes: MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(laser, out hit, grabDistance))
             {
-                Debug.Log($"{hit.collider.tag}:{hit.collider.name}");
                 switch (hit.collider.tag)
                 {
                     case "Plant":
@@ -63,6 +62,10 @@ public class Kes: MonoBehaviour
                         else
                         {
                             DropPlant();
+                            if (hit.transform != plant)// is it a different plant?
+                            {
+                                PickUpPlant(hit);
+                            }
                         }
                         break;
                     
