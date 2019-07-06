@@ -63,9 +63,9 @@ public class Kes: MonoBehaviour
             {
                 switch (hit.collider.tag)
                 {
-                    case "Slot":
+                    case "Slot": // TODO: make Plants ignore Raycast when put down?
                     case "Plant":
-                        Slot slot = SlotAtPosition(hit); // TODO: should match through Plant
+                        Slot slot = SlotAtPosition(hit);
 
                         if (heldObject == HeldObject.plant && !slot.hasPlant)
                         {
@@ -151,7 +151,7 @@ public class Kes: MonoBehaviour
     }
 
     //==================================================================================
-    private void PickUpPlant(RaycastHit hit)
+    private void PickUpPlantFromSlot(RaycastHit hit)
     {
         hit.transform.position = arms.position;
         hit.transform.parent = null;

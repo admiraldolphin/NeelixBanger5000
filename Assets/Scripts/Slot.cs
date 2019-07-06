@@ -21,14 +21,14 @@ public class Slot : MonoBehaviour
 
     public void PlacePlant(Plant plant)
     {
-        plant.CheckEnvironment(this)
+        plant.PutDown(this)
         plantIndex = plant.index
         Debug.Log($"Plant {plant.index} placed in slot {name}");
     }
 
     public void RemovePlant(Plant plant)
     {
-        plant.PickedUp()
+        plant.PickUp()
         plantIndex = -1;
         Debug.Log($"Plant {plant.index} removed from slot {name}");
     }
