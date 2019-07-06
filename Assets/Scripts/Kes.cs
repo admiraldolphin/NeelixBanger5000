@@ -11,11 +11,36 @@ public class Kes: MonoBehaviour
     public Transform holding;
     public LevelGod levelGod;
 
+    public Transform[] armModels;
+
     private CharacterController controller;
 
     void Awake()
     {
         controller = GetComponent<CharacterController>();
+    }
+    void Start()
+    {
+        HideArms();
+    }
+
+    private void HideArms()
+    {
+        foreach (var arm in armModels)
+        {
+            var position = arm.localPosition;
+            position.z = -0.5f;
+            arm.localPosition = position;
+        }
+    }
+    private void ShowArms()
+    {
+        foreach (var arm in armModels)
+        {
+            var position = arm.localPosition;
+            position.z = 0.5f;
+            arm.localPosition = position;
+        }
     }
 
     // Update is called once per frame
@@ -47,6 +72,41 @@ public class Kes: MonoBehaviour
         // Move the controller
         controller.Move(moveDirection * Time.deltaTime);
 
+        bool needToShowArms = false;
+        if (holding != null)
+        {
+            needToShowArms = true;
+        }
+
+        HandleClick();
+
+        var hoveredPlant = ShowUI();
+        if (hoveredPlant != null)
+        {
+            needToShowArms = true;
+            // handle the button interaction in here
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Debug.Log("You water the plant");
+            }
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                Debug.Log("You glare at the plant");
+            }
+        }
+
+        if (needToShowArms)
+        {
+            ShowArms();
+        }
+        else
+        {
+            HideArms();
+        }
+    }
+
+    private void HandleClick()
+    {
         if (Input.GetMouseButtonDown(0))
         {
             Ray laser = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -88,6 +148,31 @@ public class Kes: MonoBehaviour
                 DropPlant();
             }
         }
+    }
+
+    // basically if we are within distance of a plant
+    // and the cursor is over the top
+    // then show the UI for it
+    // returns the plant it is over if it is over one
+    private Plant ShowUI()
+    {
+        Ray laser = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(laser, out hit, grabDistance))
+        {
+            if (hit.collider.tag == "Plant")
+            {
+                var plant = hit.transform.GetComponent<Plant>();
+
+                // show the plant UI then
+                levelGod.ShowUI();
+                return plant;
+            }
+        }
+
+        levelGod.HideUI();
+        return null;
     }
 
     private void PickUpPlant(RaycastHit hit)

@@ -7,6 +7,8 @@ public class LevelGod : MonoBehaviour
     public Slot[] slots;
     public List<Plant> plants = new List<Plant>();
 
+    public GameObject UI;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +21,17 @@ public class LevelGod : MonoBehaviour
             slots[i] = slot;
         }
         CreatePlant();
+
+        UI.SetActive(false);
+    }
+
+    public void ShowUI()
+    {
+        UI.SetActive(true);
+    }
+    public void HideUI()
+    {
+        UI.SetActive(false);
     }
 
     public Plant plantPrefab;
