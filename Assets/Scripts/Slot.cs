@@ -4,36 +4,39 @@ using UnityEngine;
 
 public class Slot : MonoBehaviour
 {
-    // this is the index of the plant in the plants list on levelgod
-    public int plant = -1;
+    // the index of the plant occupying the slot
+    public int plantIndex = -1;
 
-    // the default slot type, designed to be overwritten
-    public Atmosphere atmosphere = Atmosphere.air;
-    public Soil soil = Soil.dirt;
+    // default settings for slots
+    public Atmosphere atmosphere = Atmosphere.oxygen;
     public Temperature temperature = Temperature.moderate;
+    public Soil soil = Soil.dirt;
+    public LightLevel lightLevel = LightLevel.normal;
 
-    // fuck this is terrible...
-    public Change[] changes
+    // == COMPUTED PROPERTIES ==
+
+    public bool hasPlant
     {
-        get
-        {
-            var atmosChange = new Change();
-            atmosChange.type = ChangeType.atmosphere;
-            atmosChange.atmosphere = atmosphere;
-            atmosChange.index = plant;
+        get { return (index != -1); }
+    }
 
-            var soilChange = new Change();
-            soilChange.type = ChangeType.soil;
-            soilChange.soil = soil;
-            soilChange.index = plant;
+    public void PlacePlant(Plant plant)
+    {
+        plant.CheckEnvironment(this)
+        plantIndex = plant.index
+        Debug.Log($"Plant {plant.index} placed in slot {name}");
+    }
 
-            var temperatureChange = new Change();
-            temperatureChange.type = ChangeType.temperature;
-            temperatureChange.temperature = temperature;
-            temperatureChange.index = plant;
+    public void RemovePlant(Plant plant)
+    {
+        plant.PickedUp()
+        plantIndex = -1;
+        Debug.Log($"Plant {plant.index} removed from slot {name}");
+    }
 
-            Change[] changes = {atmosChange, soilChange, temperatureChange};
-            return changes;
-        }
+    public void ChangeSoil(Soil soil)
+    {
+        this.soil = soil
+        Debug.Log($"Slot {name} changed soil.");
     }
 }

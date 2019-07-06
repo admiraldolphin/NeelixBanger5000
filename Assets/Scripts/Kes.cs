@@ -2,14 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum HeldObject { nutrient, plant, soil };
+
 public class Kes: MonoBehaviour
 {
     public float movementSpeed = 1;
     public float gravity = 20;
     public float grabDistance = 2;
+
+    //==================================================================================
     public Transform arms;
     public Transform holding;
+    //==================================================================================
+
     public LevelGod levelGod;
+
+    public HeldObject heldObject = null;
 
     private CharacterController controller;
 
@@ -55,44 +63,89 @@ public class Kes: MonoBehaviour
             {
                 switch (hit.collider.tag)
                 {
+                    case "Slot":
                     case "Plant":
-                        if (holding == null)
+                        Slot slot = SlotAtPosition(hit); // TODO: should match through Plant
+
+                        if (heldObject == HeldObject.soil)
                         {
-                            PickUpPlant(hit);
+                            levelGod.ChangeSoil(slot);
+                            heldObject = null;
                         }
-                        else
+                            
+                        if (heldObject == HeldObject.nutrient)
                         {
-                            DropPlant();
-                            if (hit.transform != holding)// is it a different plant?
+                            levelGod.FeedPlant(slot);
+                            heldObject = null;
+                        }
+
+                        if (heldObject == HeldObject.plant)
+                        {
+                            levelGod.PlacePlant(slot);
+                            heldObject = null;
+                        }
+                        
+                        if (heldObject == null)
+                        {
+                            if (slot.hasPlant)
                             {
-                                PickUpPlant(hit);
+                                // pickup plant in this class/do the physics bit
+                                levelGod.PickupPlant(slot);
+                                heldObject = HeldObject.plant;
                             }
+                        }                                
+                        break;
+
+                    case "Nutrient":
+                        if (heldObject == null)
+                        {
+                            // get nutrient
+                            // levelGod.PickupNutrient(nutrientID);
+                            heldObject = HeldObject.nutrient;
                         }
                         break;
-                    
-                    // case "Shelf":
-                    //     PlacePlantOnShelf(hit);
-                    //     break;
-                    
-                    case "Slot":
-                        if (holding != null) // we want to put the plant on that slot
+
+                    case "Soil":
+                        if (heldObject == null)
                         {
-                            PlacePlantOnSlot(hit);
+                            // get soil
+                            // levelGod.PickupSoil(soilID);
+                            heldObject = HeldObject.soil;
+                        }  
+                        break;
+
+                    case "Workstation":
+                        if (heldObject == HeldObject.plant)
+                        {
+                            levelGod.ExaminePlantWithWorkstation();
                         }
                         break;
 
                     default:
-                        Debug.Log("shitballs");
+                        Debug.Log("Attempting interaction with unknown object.");
                         break;
                 }
-            }
-            else
-            {
-                DropPlant();
             }
         }
     }
 
+
+    private Slot SlotAtPosition(RayCastHit hit)
+    {
+        return hit.transform.GetComponent<Slot>();
+    }
+
+    private Nutrient NutrientAtPosition(RayCastHit hit)
+    {
+        return hit.transform.GetComponent<Nutrient>();
+    }
+
+    private Soil SoilAtPosition(RayCastHit hit)
+    {
+        return hit.transform.GetComponent<Soil>();
+    }
+
+    //==================================================================================
     private void PickUpPlant(RaycastHit hit)
     {
         hit.transform.position = arms.position;
@@ -102,37 +155,12 @@ public class Kes: MonoBehaviour
         var plant = hit.transform.GetComponent<Plant>();
 
         levelGod.PickupPlant(plant);
-
         holding = hit.transform;
     }
-    private void DropPlant()
-    {
-        if (holding != null)
-        {
-            holding.rotation = Quaternion.identity;
-            holding.GetComponent<Rigidbody>().isKinematic = false;
-            var plant = holding.GetComponent<Plant>();
-            levelGod.DropPlant(plant.index);
-            holding.parent = null;
-            holding = null;
-        }
-    }
-    private void PlacePlantOnShelf(RaycastHit hit)
-    {
-        var shelf = hit.transform.GetComponent<Shelf>();
-        if (holding != null)
-        {
-            var plant = holding.GetComponent<Plant>();
-            holding.parent = null;
-            shelf.PlacePlant(holding);
-            holding = null;
 
-            //levelGod.PlacePlant(0, plant.index);
-        }
-    }
     private void PlacePlantOnSlot(RaycastHit hit)
     {
-        if (holding != null) // we want to put the plant on that slot
+        if (holding != null)
         {
             var plant = holding.GetComponent<Plant>();
             holding.parent = null;
@@ -143,4 +171,5 @@ public class Kes: MonoBehaviour
             holding = null;
         }
     }
+    //==================================================================================
 }
