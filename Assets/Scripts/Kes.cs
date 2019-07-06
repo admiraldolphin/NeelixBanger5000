@@ -69,7 +69,7 @@ public class Kes: MonoBehaviour
 
                         if (heldObject == HeldObject.plant && !slot.hasPlant)
                         {
-                            // animate/physics?
+                            PlacePlantOnSlot(slot);
                             levelGod.PlacePlant(slot);
                             heldObject = null;
                         }
@@ -78,21 +78,21 @@ public class Kes: MonoBehaviour
                         {
                             if (heldObject == null)
                             {
-                                // animate/physics?
+                                PickUpPlantFromSlot(slot);
                                 levelGod.PickupPlant(slot);
                                 heldObject = HeldObject.plant;
                             }    
 
                             if (heldObject == HeldObject.soil)
                             {
-                                // animate/physics?
+                                PutDownSoil(soil);
                                 levelGod.ChangeSoil(slot);
                                 heldObject = null;
                             }
                                 
                             if (heldObject == HeldObject.nutrient)
                             {
-                                // animate/physics?
+                                PutDownNutrient(nutrient);
                                 levelGod.FeedPlant(slot);
                                 heldObject = null;
                             }
@@ -208,7 +208,6 @@ public class Kes: MonoBehaviour
 
     // TODO: function to pickup soil or put it back in 1 single pre-defined spot
     // else you either have to use it up on an occupied slot or carry it around
-
     private void PickUpSoil(Soil soil)
     {
         // just hide the sprite of that kind of soil in the scene
