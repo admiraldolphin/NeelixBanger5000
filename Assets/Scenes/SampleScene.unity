@@ -761,5 +761,6 @@ MonoBehaviour:
   movementSpeed: 10
   jumpSpeed: 10
   gravity: 20
-  grabDistance: 100
+  grabDistance: 3.5
   arms: {fileID: 97501756}
+  plant: {fileID: 0}
