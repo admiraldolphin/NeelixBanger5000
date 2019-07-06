@@ -167,8 +167,7 @@ public class LevelGod : MonoBehaviour
         Plant plant = plants[slot.plantIndex];
         Soil soil = SOILS[heldSoilIndex];
 
-        slot.ChangeSoil(soil);
-        plant.CheckEnvironment(this);
+        plant.ChangeSoil(soil, slot);
 
         heldSoilIndex = -1;
         // disappear model to represent it being used up

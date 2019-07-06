@@ -10,7 +10,6 @@ public class Slot : MonoBehaviour
     // default settings for slots
     public Atmosphere atmosphere = Atmosphere.oxygen;
     public Temperature temperature = Temperature.moderate;
-    public Soil soil = Soil.dirt;
     public LightLevel lightLevel = LightLevel.normal;
 
     // == COMPUTED PROPERTIES ==
@@ -32,11 +31,5 @@ public class Slot : MonoBehaviour
         plant.PickedUp()
         plantIndex = -1;
         Debug.Log($"Plant {plant.index} removed from slot {name}");
-    }
-
-    public void ChangeSoil(Soil soil)
-    {
-        this.soil = soil
-        Debug.Log($"Slot {name} changed soil.");
     }
 }

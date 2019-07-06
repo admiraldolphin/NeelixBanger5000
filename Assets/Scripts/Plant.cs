@@ -30,6 +30,9 @@ public class Plant: MonoBehaviour
     // how many properties of the plant have been discovered
     public int discoveredProperties = 0;
 
+    // what soil is in its tray
+    public Soil traySoil = Soil.dirt;
+
     // should tick up over time
     public int lastFed = 0;
     public bool lastInCorrectEnvironment = 0;
@@ -97,7 +100,7 @@ public class Plant: MonoBehaviour
         // check if new conditions match requirements
         correctEnvironment = (slot.atmosphere == this.atmosphere) &&
             (slot.temperature == this.temprature) &&
-            (slot.soil == this.soil) &&
+            (traySoil == this.soil) &&
             (slot.lightLevel == this.lightLevel);
 
         if (correctEnvironment)
@@ -118,7 +121,7 @@ public class Plant: MonoBehaviour
     }
 
     // plant was pickedUp() and is now in limbo
-    public void PickedUp()
+    public void PickUp()
     {
         CheckEnvironment(DEFAULT_ENVIRONMENT);
     }
@@ -135,5 +138,14 @@ public class Plant: MonoBehaviour
 
         Debug.Log($"Plant {index} did not like the nutrient.");
         return false;
+    }
+
+    public bool ChangeSoil(Soil soil, Slot slot)
+    {
+        traySoil = soil;
+
+        // check if new conditions match requirements
+        correctEnvironment = CheckEnvironment(slot);
+        return correctEnvironment;
     }
 }

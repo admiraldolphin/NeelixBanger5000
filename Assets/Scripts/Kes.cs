@@ -67,36 +67,36 @@ public class Kes: MonoBehaviour
                     case "Plant":
                         Slot slot = SlotAtPosition(hit); // TODO: should match through Plant
 
-                        if (heldObject == HeldObject.soil)
-                        {
-                            // animate/physics?
-                            levelGod.ChangeSoil(slot);
-                            heldObject = null;
-                        }
-                            
-                        if (heldObject == HeldObject.nutrient)
-                        {
-                            // animate/physics?
-                            levelGod.FeedPlant(slot);
-                            heldObject = null;
-                        }
-
-                        if (heldObject == HeldObject.plant)
+                        if (heldObject == HeldObject.plant && !slot.hasPlant)
                         {
                             // animate/physics?
                             levelGod.PlacePlant(slot);
                             heldObject = null;
                         }
-                        
-                        if (heldObject == null)
+
+                        if (slot.hasPlant)
                         {
-                            if (slot.hasPlant)
+                            if (heldObject == null)
                             {
                                 // animate/physics?
                                 levelGod.PickupPlant(slot);
                                 heldObject = HeldObject.plant;
+                            }    
+
+                            if (heldObject == HeldObject.soil)
+                            {
+                                // animate/physics?
+                                levelGod.ChangeSoil(slot);
+                                heldObject = null;
                             }
-                        }                                
+                                
+                            if (heldObject == HeldObject.nutrient)
+                            {
+                                // animate/physics?
+                                levelGod.FeedPlant(slot);
+                                heldObject = null;
+                            }
+                        }
                         break;
 
                     case "Nutrient":
