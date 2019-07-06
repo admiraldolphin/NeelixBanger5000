@@ -35,18 +35,45 @@ public class LevelGod : MonoBehaviour
         plants.Add(plant);
     }
 
+    private List<Change> changeList = new List<Change>();
+    private void FlagChanges(Change[] changes)
+    {
+        changeList.AddRange(changes);
+    }
+    private void FlagChange(Change change)
+    {
+        changeList.Add(change);
+    }
+
     private void Tick()
     {
-        // Debug.Log($"There are {plants.Count} plants");
-        // Debug.Log($"There are {slots.Length} slots");
-
+        // giving each plant the slots attributes
         foreach (var slot in slots)
         {
+            // if you have a plant you flag it needing changes
             if (slot.plant != -1)
             {
                 Debug.Log($"{slot.name} holds plant {plants[slot.plant].name}");
+                FlagChanges(slot.changes);
             }
         }
+
+        Debug.Log($"flagged {changeList.Count} changes");
+
+        // processing each change
+        while (changeList.Count > 0)
+        {
+            var change = changeList[0];
+            var result = plants[change.index].ProcessChange(change);
+
+            if (result != null && result.Length > 0)
+            {
+                FlagChanges(result);
+            }
+
+            changeList.RemoveAt(0);
+        }
+        changeList.Clear();// in theory they are all gone by now but it never hurts to make sure
     }
 
     public void PickupPlant(Plant plant)
@@ -100,8 +127,26 @@ public class LevelGod : MonoBehaviour
 
         if (elapsed > TickRate)
         {
-            Tick();
             elapsed = 0;
+            Tick();
         }
     }
+}
+
+public enum Atmosphere { air, weird }
+public enum Soil { dirt, ash }
+public enum Temperature {moderate, cold, hot}
+
+public enum ChangeType {atmosphere, soil, temperature}
+public enum ChangeGroup {slot, plant}
+public class Change
+{
+    public ChangeType type = ChangeType.atmosphere;
+    public ChangeGroup group = ChangeGroup.plant;
+    public int index = 0;
+    
+    // these are the defaults
+    public Atmosphere atmosphere = Atmosphere.air;
+    public Soil soil = Soil.dirt;
+    public Temperature temperature = Temperature.moderate;
 }
