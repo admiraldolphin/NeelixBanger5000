@@ -289,7 +289,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slots: []
   plants: []
-  mapping: 
   plantPrefab: {fileID: 2689758954416638004, guid: c5894b8bf305042f4a925afd38ef1632,
     type: 3}
   TickRate: 2
@@ -378,6 +377,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.x
       value: 0.19999999
+      objectReference: {fileID: 0}
+    - target: {fileID: 4715902017587989403, guid: 4ab6c4a1593bf4191b7f6e25d14fcb67,
+        type: 3}
+      propertyPath: soil
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4ab6c4a1593bf4191b7f6e25d14fcb67, type: 3}

@@ -21,6 +21,7 @@ public class Plant: MonoBehaviour
 
     public Change[] ProcessChange(Change change)
     {
+        List<Change> changes = new List<Change>();
         // in here is where we can make plants do all sorts of weird stuff
         // by returning a new change we can keep shit getting real!
         switch(change.type)
@@ -58,6 +59,6 @@ public class Plant: MonoBehaviour
                 }
                 break;
         }
-        return null;
+        return changes.ToArray();
     }
 }

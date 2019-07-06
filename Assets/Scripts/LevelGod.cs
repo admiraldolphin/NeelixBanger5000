@@ -47,33 +47,61 @@ public class LevelGod : MonoBehaviour
 
     private void Tick()
     {
-        // giving each plant the slots attributes
-        foreach (var slot in slots)
-        {
-            // if you have a plant you flag it needing changes
-            if (slot.plant != -1)
-            {
-                Debug.Log($"{slot.name} holds plant {plants[slot.plant].name}");
-                FlagChanges(slot.changes);
-            }
-        }
-
-        Debug.Log($"flagged {changeList.Count} changes");
+        Debug.Log($"There are {changeList.Count} changes to be processed");
 
         // processing each change
         while (changeList.Count > 0)
         {
             var change = changeList[0];
-            var result = plants[change.index].ProcessChange(change);
+
+            Change[] result = null;
+            if (change.group == ChangeGroup.plant)
+            {
+                Debug.Log($"Performing a change on plant {change.toIndex}");
+                result = plants[change.toIndex].ProcessChange(change);
+            }
+            else
+            {
+                Debug.Log($"Performing a change on slot {change.toIndex}");
+                result = slots[change.toIndex].ProcessChange(change);
+            }
 
             if (result != null && result.Length > 0)
             {
+                Debug.Log($"There are {result.Length} precolating results");
                 FlagChanges(result);
             }
-
             changeList.RemoveAt(0);
+            Debug.Log($"There are {changeList.Count} changes remaining");
         }
         changeList.Clear();// in theory they are all gone by now but it never hurts to make sure
+    }
+
+    // flagging changes for the plant now having been added to the slot
+    private void PlantedChanges(Slot slot)
+    {
+        Debug.Log($"{slot.name} holds plant {plants[slot.plant].name}");
+
+        var index = -1;
+        for(int i = 0; i < slots.Length; i++)
+        {
+            if (slot == slots[i])
+            {
+                index = i;
+            }
+        }
+        if (index == -1)
+        {
+            Debug.Log("invalid index");
+            return;
+        }
+
+        var changes = slot.changes;
+        for (int j = 0; j < changes.Length; j++)
+        {
+            changes[j].fromIndex = index;
+        }
+        FlagChanges(changes);
     }
 
     public void PickupPlant(Plant plant)
@@ -112,6 +140,7 @@ public class LevelGod : MonoBehaviour
     {
         slot.plant = plant;
         Debug.Log("Placed plants");
+        PlantedChanges(slot);
     }
     public void DropPlant(int plant)
     {
@@ -143,10 +172,41 @@ public class Change
 {
     public ChangeType type = ChangeType.atmosphere;
     public ChangeGroup group = ChangeGroup.plant;
-    public int index = 0;
+    public int toIndex = 0; // the index of what is to accept the change
+    public int fromIndex = 0; // the index of what has made the change
     
     // these are the defaults
     public Atmosphere atmosphere = Atmosphere.air;
     public Soil soil = Soil.dirt;
     public Temperature temperature = Temperature.moderate;
+
+    public static Change AtmosphereChange(int toIndex, Atmosphere modification)
+    {
+        var change = new Change();
+        change.type = ChangeType.atmosphere;
+        change.atmosphere = modification;
+        change.toIndex = toIndex;
+
+        return change;
+    }
+
+    public static Change SoilChange(int toIndex, Soil modification)
+    {
+        var change = new Change();
+        change.type = ChangeType.soil;
+        change.soil = modification;
+        change.toIndex = toIndex;
+
+        return change;
+    }
+
+    public static Change TemperatureChange(int toIndex, Temperature modification)
+    {
+        var change = new Change();
+        change.type = ChangeType.temperature;
+        change.temperature = modification;
+        change.toIndex = toIndex;
+
+        return change;
+    }
 }
