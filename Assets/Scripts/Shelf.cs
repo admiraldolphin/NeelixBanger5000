@@ -53,16 +53,32 @@ public class Shelf: MonoBehaviour
 
     private void StorePlant(Transform plant, Transform slot)
     {
-        var position = slot.position;
-        position.y += 0.5f;
-        plant.position = position;
-        plant.parent = null;
-        plant.parent = slot.transform;
+        if (!SlotHasPlant(slot))
+        {
+            var position = slot.position;
+            position.y += 0.5f;
+            plant.position = position;
+            plant.rotation = Quaternion.identity;
+            plant.parent = null;
+            plant.parent = slot.transform;
+        }
     }
 
     // we put it exactly where we clicked
     public void PlacePlant(Transform plant, Transform spot)
     {
         StorePlant(plant, spot);
+    }
+
+    private bool SlotHasPlant(Transform slot)
+    {
+        for (int i = 0; i < slot.childCount; i++)
+        {
+            if (slot.tag == "Plant")
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

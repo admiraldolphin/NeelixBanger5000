@@ -113,6 +113,7 @@ public class Kes: MonoBehaviour
     {
         if (plant != null)
         {
+            plant.rotation = Quaternion.identity;
             plant.GetComponent<Rigidbody>().isKinematic = false;
             plant.parent = null;
             plant = null;
