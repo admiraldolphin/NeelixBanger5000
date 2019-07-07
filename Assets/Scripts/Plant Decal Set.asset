@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9faaa93960f6749828cdefe291665fd5, type: 3}
+  m_Name: Plant Decal Set
+  m_EditorClassIdentifier: 
+  flowers:
+  - {fileID: 706208446804894324, guid: 3ae34f8672a1b4ce5a5f9f28b93b1d91, type: 3}
+  - {fileID: 6086344846361751501, guid: 7e85240c3374042f2bc4552ca32af864, type: 3}
+  - {fileID: 2116260678117766074, guid: 5b0a4e85e39a54fe291c6a2beca9fe57, type: 3}
+  - {fileID: 7493753292622122188, guid: b3ce24f0dd04d4a928ff6f21bd5ae243, type: 3}
+  fruits:
+  - {fileID: 5641880675991786163, guid: 3c7e2108a881f4075b4df5b92f1ba185, type: 3}
+  - {fileID: 3857121539142262885, guid: 3881a387a92dc481ba04990122ef1c93, type: 3}
