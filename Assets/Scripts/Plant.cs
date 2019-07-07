@@ -12,8 +12,8 @@ public class Plant: MonoBehaviour
 {
     // == CONSTANT PROPERTIES ==
 
-    const int HAPPINESS_THRESHOLD = 5; // how long a plant can be HAPPY without its needs met
-    const int LIVINGNESS_THRESHOLD = 10; // how long a plant can be ALIVE without its needs met
+    const int HAPPINESS_THRESHOLD = 10; // how long a plant can be HAPPY without its needs met
+    const int LIVINGNESS_THRESHOLD = 20; // how long a plant can be ALIVE without its needs met
 
     // default settings for plants
     public Atmosphere atmosphere = Atmosphere.oxygen;
@@ -131,6 +131,14 @@ public class Plant: MonoBehaviour
     {
         levelGod = GameObject.FindObjectOfType<LevelGod>();
         healthyColor = GetComponent<MeshRenderer>().material.color;
+
+        Soil[] randoSoil = (Soil[])System.Enum.GetValues(typeof(Soil));
+        LightLevel[] randoLight = (LightLevel[])System.Enum.GetValues(typeof(LightLevel));
+        var requiremenSoil = randoSoil[Random.Range(0, randoSoil.Length)];
+        var requiremenLight = randoLight[Random.Range(0, randoLight.Length)];
+
+        soil = requiremenSoil;
+        lightLevel = requiremenLight;
 
         if (plantDecalSet == null) 
         {
