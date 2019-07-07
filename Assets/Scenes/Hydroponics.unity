@@ -2314,6 +2314,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Keyboard
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 8ec46a696dca54f3abb424ff4535dcff,
+        type: 3}
+      propertyPath: m_TagString
+      value: Workstation
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 8ec46a696dca54f3abb424ff4535dcff,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6381,6 +6386,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Table Small
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 45d6e1391bb44422b8d176c69592b83d,
+        type: 3}
+      propertyPath: m_TagString
+      value: Workstation
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 45d6e1391bb44422b8d176c69592b83d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7861,6 +7871,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Monitor
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: aa33f5f5e620e4441abccfaaf1515b28,
+        type: 3}
+      propertyPath: m_TagString
+      value: Workstation
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: aa33f5f5e620e4441abccfaaf1515b28,
         type: 3}
