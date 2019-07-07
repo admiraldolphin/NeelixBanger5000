@@ -23,10 +23,13 @@ public class LevelGod: MonoBehaviour
     private int heldPlantIndex = -1;
     private int heldNutrientIndex = -1;
     private int heldSoilIndex = -1;
-
-    public Color sick = Color.red;
-    public Color dead = Color.black;
-
+    
+    public Color sandColor;
+    public Color dirtColor;
+    public Color tarColor;
+    public Color ashColor;
+    public Color boneCharColor;
+    
     // == GAME SETUP AND LOGISTICS ==
 
     public GameObject UI;
@@ -79,18 +82,7 @@ public class LevelGod: MonoBehaviour
 
             if (!plantIsWell)
             {
-                Debug.Log($"Plant {plant.index} has worsened");
-                var renderer = plant.GetComponentInChildren<MeshRenderer>();
-                renderer.material.color = sick;
-
-                if (!plant.isAlive)
-                {
-                    renderer.material.color = dead;
-                }
-                else
-                {
-                    renderer.material.color = sick;
-                }
+                Debug.Log($"Plant {plant.index} has worsened");        
             }
         }
         CreatePlant();
@@ -124,6 +116,8 @@ public class LevelGod: MonoBehaviour
 
             plant.index = plants.Count;
             spawnSlot.plantIndex = plant.index;
+
+            plant.ChangeSoil(Soil.dirt, spawnSlot, dirtColor);
             
             plants.Add(plant);
         }
@@ -212,7 +206,29 @@ public class LevelGod: MonoBehaviour
         Plant plant = plants[slot.plantIndex];
         Soil soil = SOILS[heldSoilIndex];
 
-        plant.ChangeSoil(soil, slot);
+        Color c = Color.white;
+
+        switch (soil) {
+            case Soil.ash:
+            c = ashColor;
+            break;
+            case Soil.bonechar:
+            c = boneCharColor;
+            break;
+            case Soil.dirt:
+            c = dirtColor;
+            break;
+            case Soil.sand:
+            c = sandColor;
+            break;
+            case Soil.tar:
+            c = tarColor;
+            break;
+            
+            
+        }
+
+        plant.ChangeSoil(soil, slot, c);
         heldSoilIndex = -1;
         // TODO: disappear model to represent it being used up
     }

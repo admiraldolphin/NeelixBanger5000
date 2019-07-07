@@ -12,6 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9faaa93960f6749828cdefe291665fd5, type: 3}
   m_Name: Plant Decal Set
   m_EditorClassIdentifier: 
+  bases:
+  - {fileID: -927199367670048503, guid: f4825cc692bde43518598718633ca5a4, type: 3}
+  - {fileID: -927199367670048503, guid: 061a7b6281ddd432893c085ece71b791, type: 3}
+  - {fileID: -927199367670048503, guid: d2571e1b8215f4e3e9a3a920fd9b43f6, type: 3}
+  - {fileID: -927199367670048503, guid: 6fbfda03ea3d246989bbe82258ca6871, type: 3}
+  - {fileID: -927199367670048503, guid: 23122007dd4674b1f988cc7e3e1cb3a1, type: 3}
+  - {fileID: -927199367670048503, guid: b2c963a0b1c0a44b88414d20d326957d, type: 3}
+  - {fileID: -927199367670048503, guid: 6910aee5d363b460c868da1fead14629, type: 3}
+  - {fileID: -927199367670048503, guid: df3a0ac02014343d8af0546b2348b8d5, type: 3}
+  - {fileID: -927199367670048503, guid: 71d1a248e21d54b0cbba2b276a91d2c7, type: 3}
+  - {fileID: -927199367670048503, guid: 94ae10300d0e541a2af7a1b7b0972d34, type: 3}
+  - {fileID: -927199367670048503, guid: 0a670bef700d64495b86bd074ee6fdb3, type: 3}
+  - {fileID: -927199367670048503, guid: a7ea3df8c77a24d8d88598a2b64d8ab3, type: 3}
+  - {fileID: -927199367670048503, guid: 9b643f479162547018991cab951e5c87, type: 3}
   flowers:
   - {fileID: 706208446804894324, guid: 3ae34f8672a1b4ce5a5f9f28b93b1d91, type: 3}
   - {fileID: 6086344846361751501, guid: 7e85240c3374042f2bc4552ca32af864, type: 3}

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +15,12 @@ public class Plant: MonoBehaviour
 
     const int HAPPINESS_THRESHOLD = 10; // how long a plant can be HAPPY without its needs met
     const int LIVINGNESS_THRESHOLD = 20; // how long a plant can be ALIVE without its needs met
+
+    public Color sickColor = Color.red;
+    public Color deadColor = Color.black;
+
+    public MeshRenderer traySoilRenderer;
+
 
     // default settings for plants
     public Atmosphere atmosphere = Atmosphere.oxygen;
@@ -42,6 +49,8 @@ public class Plant: MonoBehaviour
 
     // should update on putDown()
     public bool correctEnvironment = false;
+
+    private GameObject plantBaseInstance;
 
     // == COMPUTED PROPERTIES ==
 
@@ -87,7 +96,24 @@ public class Plant: MonoBehaviour
 
         lastFed += 1;
 
+        UpdateHealthAppearance();
+
         return (isHappy && isAlive);
+    }
+
+    private void UpdateHealthAppearance()
+    {
+        var baseRenderer = plantBaseInstance.GetComponent<MeshRenderer>();
+        
+        if (isAlive) {
+            if (isHappy) {
+                baseRenderer.material.color = healthyColor;                
+            } else {
+                baseRenderer.material.color = sickColor;
+            }
+        } else {
+            baseRenderer.material.color = deadColor;
+        }
     }
 
     // plant was putDown() in new slot
@@ -98,9 +124,11 @@ public class Plant: MonoBehaviour
         return correctEnvironment;
     }
 
-    public bool ChangeSoil(Soil soil, Slot slot)
+    public bool ChangeSoil(Soil soil, Slot slot, Color soilColor)
     {
         traySoil = soil;
+
+        traySoilRenderer.material.color = soilColor;
 
         // check if new conditions match requirements
         correctEnvironment = CheckEnvironment(slot);
@@ -130,12 +158,14 @@ public class Plant: MonoBehaviour
     private void Awake() 
     {
         levelGod = GameObject.FindObjectOfType<LevelGod>();
-        healthyColor = GetComponent<MeshRenderer>().material.color;
+        
+        var bases = plantDecalSet.bases;
+        var plantBasePrefab = bases[UnityEngine.Random.Range(0, bases.Length)];
 
         Soil[] randoSoil = (Soil[])System.Enum.GetValues(typeof(Soil));
         LightLevel[] randoLight = (LightLevel[])System.Enum.GetValues(typeof(LightLevel));
-        var requiremenSoil = randoSoil[Random.Range(0, randoSoil.Length)];
-        var requiremenLight = randoLight[Random.Range(0, randoLight.Length)];
+        var requiremenSoil = randoSoil[UnityEngine.Random.Range(0, randoSoil.Length)];
+        var requiremenLight = randoLight[UnityEngine.Random.Range(0, randoLight.Length)];
 
         soil = requiremenSoil;
         lightLevel = requiremenLight;
@@ -145,18 +175,23 @@ public class Plant: MonoBehaviour
             return;
         }
 
+        plantBaseInstance = Instantiate(plantBasePrefab);
+        plantBaseInstance.transform.SetParent(this.transform, true);
+        plantBaseInstance.transform.position = this.transform.position;
+
+        healthyColor = UnityEngine.Random.ColorHSV(0,1,0.8f,0.9f, 0.8f, 1f);
+        
         // TODO: choose a decal object based on input from elsewhere, not here
 
-        var set = Random.Range(0,2) == 0 ? plantDecalSet.flowers : plantDecalSet.fruits;
+        var set = UnityEngine.Random.Range(0,2) == 0 ? plantDecalSet.flowers : plantDecalSet.fruits;
 
-        var decal = set[Random.Range(0, set.Length)];
+        var decal = set[UnityEngine.Random.Range(0, set.Length)];
 
-        var decalColor = Random.ColorHSV(0,1,0.8f,0.9f, 0.8f, 1f);
-        var mainColor = Random.ColorHSV(0,1,0.8f,0.9f, 0.8f, 1f);
-
-        foreach (var renderer in this.GetComponentsInChildren<MeshRenderer>()) 
+        var decalColor = UnityEngine.Random.ColorHSV(0,1,0.8f,0.9f, 0.8f, 1f);
+        
+        foreach (var renderer in plantBaseInstance.GetComponentsInChildren<MeshRenderer>()) 
         {
-            renderer.material.color = mainColor;
+            renderer.material.color = healthyColor;
         }
 
         foreach (var spawner in GetComponentsInChildren<DecalObjectSpawner>()) 

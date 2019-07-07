@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu]
 public class PlantDecalSet : ScriptableObject
 {
+    public GameObject[] bases;
     public GameObject[] flowers;
     public GameObject[] fruits;
 

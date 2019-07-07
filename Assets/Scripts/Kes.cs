@@ -189,7 +189,9 @@ public class Kes: MonoBehaviour
                 {
                     case "Plant":
                         Slot pSlot = SlotAtPlantPosition(hit);
-                        SlotInteract(pSlot);
+                        if (pSlot != null) {
+                            SlotInteract(pSlot);
+                        }
                         break;
 
                     case "Slot":
@@ -312,10 +314,20 @@ public class Kes: MonoBehaviour
 
     private void PlacePlantOnSlot(Slot slot)
     {
-        holding.transform.parent = null;
-        slot.transform.parent.GetComponent<Shelf>().PlacePlant(holding, slot);
+        var position = slot.transform.position;
+        var plant = holding;
+        plant.position = position;
+        plant.rotation = Quaternion.identity;
+
+        plant.parent = null;
+        //plant.parent = slot.transform;
+        plant.SetParent(slot.transform);
+        Debug.Log($"parent: {plant.transform.parent.name}");
+       
 
         holding = null;
+
+        heldObject = HeldObject.none;
     }
 
     private void PickUpNutrient(int nutrient)
