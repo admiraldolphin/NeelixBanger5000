@@ -53,12 +53,12 @@ public class LevelGod: MonoBehaviour
     {
         foreach (var plant in plants)
         {
-            bool changedState = plant.PassTime();
+            bool plantIsWell = plant.PassTime();
 
-            if (changedState)
+            if (!plantIsWell)
             {
                 Debug.Log($"Plant {plant.index} has worsened");
-                // TODO: UpdateSprite(plant); // value asset brown/black as per state
+                // TODO: UpdateSprite(plant); // value asset brown/black as per state if unwell
             }
         }
     }
@@ -146,6 +146,7 @@ public class LevelGod: MonoBehaviour
         // to kill something we just remove it from the mappings and then remove the gameobject
         missedPlantIDs.Add(index);
         Destroy(plant);
+        // animate incinerator?
     }
 
     // activated empty hand on pickup-able object

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum HeldObject { nutrient, plant, soil };
+public enum HeldObject { nutrient, plant, soil, none };
 
 public class Kes: MonoBehaviour
 {
@@ -17,7 +17,7 @@ public class Kes: MonoBehaviour
 
     public LevelGod levelGod;
 
-    public HeldObject heldObject = null;
+    public HeldObject heldObject = HeldObject.none;
 
     private CharacterController controller;
 
@@ -76,7 +76,7 @@ public class Kes: MonoBehaviour
 
                         if (slot.hasPlant)
                         {
-                            if (heldObject == null)
+                            if (heldObject == HeldObject.none)
                             {
                                 PickUpPlantFromSlot(slot);
                                 levelGod.PickupPlant(slot);
@@ -87,14 +87,14 @@ public class Kes: MonoBehaviour
                             {
                                 PutDownSoil(soil);
                                 levelGod.ChangeSoil(slot);
-                                heldObject = null;
+                                heldObject = HeldObject.none;
                             }
                                 
                             if (heldObject == HeldObject.nutrient)
                             {
                                 PutDownNutrient(nutrient);
                                 levelGod.FeedPlant(slot);
-                                heldObject = null;
+                                heldObject = HeldObject.none;
                             }
                         }
                         break;
@@ -102,7 +102,7 @@ public class Kes: MonoBehaviour
                     case "Nutrient":
                         Nutrient nutrient = NutrientAtPosition(hit); 
 
-                        if (heldObject == null)
+                        if (heldObject == HeldObject.none)
                         {
                             PickUpNutrient(nutrient);
                             levelGod.PickupNutrient(nutrient);
@@ -112,14 +112,14 @@ public class Kes: MonoBehaviour
                         if(heldObject == HeldObject.nutrient)
                         {
                             PutDownNutrient(nutrient);
-                            heldObject = null;
+                            heldObject = HeldObject.none;
                         }
                         break;
 
                     case "Soil":
                         Soil soil = SoilAtPosition(hit); 
 
-                        if (heldObject == null)
+                        if (heldObject == HeldObject.none)
                         {
                             PickUpSoil(soil);
                             levelGod.PickupSoil(soil);
@@ -129,7 +129,7 @@ public class Kes: MonoBehaviour
                         if (heldObject == HeldObject.soil)
                         {
                             PutDownSoil(soil);
-                            heldObject = null;
+                            heldObject = HeldObject.none;
                         }  
                         break;
 

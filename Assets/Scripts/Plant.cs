@@ -14,7 +14,8 @@ public class Plant: MonoBehaviour
 
     const int HAPPINESS_THRESHOLD = 200; // how long a plant can be HAPPY without its needs met
     const int LIVINGNESS_THRESHOLD = 300; // how long a plant can be ALIVE without its needs met
-    const Slot DEFAULT_ENVIRONMENT = Slot(); // a limbo slot with default conditions for when being carried around
+    const Slot DEFAULT_ENVIRONMENT = new Slot(); // a limbo slot with default conditions for when being carried around
+    // TODO: construct properly ^^
 
     // default settings for plants
     public Atmosphere atmosphere = Atmosphere.oxygen;
@@ -94,6 +95,15 @@ public class Plant: MonoBehaviour
         return correctEnvironment;
     }
 
+    public bool ChangeSoil(Soil soil, Slot slot)
+    {
+        traySoil = soil;
+
+        // check if new conditions match requirements
+        correctEnvironment = CheckEnvironment(slot);
+        return correctEnvironment;
+    }
+
     // plant was putDown() in new slot or slot changed soil
     public bool CheckEnvironment(Slot slot)
     {
@@ -105,6 +115,7 @@ public class Plant: MonoBehaviour
 
         if (correctEnvironment)
         {
+            lastInCorrectEnvironment = 0;
             Debug.Log($"Plant {index} liked the change.");
             return correctEnvironment;
         }
@@ -138,14 +149,5 @@ public class Plant: MonoBehaviour
 
         Debug.Log($"Plant {index} did not like the nutrient.");
         return false;
-    }
-
-    public bool ChangeSoil(Soil soil, Slot slot)
-    {
-        traySoil = soil;
-
-        // check if new conditions match requirements
-        correctEnvironment = CheckEnvironment(slot);
-        return correctEnvironment;
     }
 }
