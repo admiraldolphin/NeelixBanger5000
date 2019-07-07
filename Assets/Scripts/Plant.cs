@@ -45,14 +45,18 @@ public class Plant: MonoBehaviour
 
     public bool isHappy
     {
-        get { return (lastFed > HAPPINESS_THRESHOLD) &&
-                (lastInCorrectEnvironment > HAPPINESS_THRESHOLD); }
+        get
+        {
+            return (lastFed > HAPPINESS_THRESHOLD) && (lastInCorrectEnvironment > HAPPINESS_THRESHOLD); 
+        }
     }
 
     public bool isAlive
     {
-        get { return (lastFed > LIVINGNESS_THRESHOLD) &&
-                (lastInCorrectEnvironment > LIVINGNESS_THRESHOLD); }
+        get 
+        { 
+            return (lastFed < LIVINGNESS_THRESHOLD) && (lastInCorrectEnvironment < LIVINGNESS_THRESHOLD); 
+        }
     }
 
     public bool requirementDiscovered
@@ -77,14 +81,14 @@ public class Plant: MonoBehaviour
         bool plantIsHappy = isHappy;
         bool plantIsAlive = isAlive;
 
-            if (!correctEnvironment)
-            {
-                lastInCorrectEnvironment += 1;
-            }
+        if (!correctEnvironment)
+        {
+            lastInCorrectEnvironment += 1;
+        }
 
-            lastFed += 1;
+        lastFed += 1;
 
-            return (plantIsHappy == this.isHappy && plantIsAlive == this.isAlive);
+        return (plantIsHappy == this.isHappy && plantIsAlive == this.isAlive);
     }
 
     // plant was putDown() in new slot

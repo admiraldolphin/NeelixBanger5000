@@ -149,6 +149,8 @@ public class LevelGod: MonoBehaviour
             Nutrient nutrient = NUTRIENTS[heldNutrientIndex];
             bool acceptedNutrient = plant.FeedNutrient(nutrient);
 
+            Debug.Log(acceptedNutrient);
+
             if (acceptedNutrient)
             {
                 Debug.Log($"Plant {plant.index} has been nourished.");
@@ -173,41 +175,26 @@ public class LevelGod: MonoBehaviour
     {
         // to kill something we just remove it from the mappings and then remove the gameobject
         missedPlantIDs.Add(plant.index);
-        Destroy(plant);
+        Destroy(plant.gameObject);
         // animate incinerator?
     }
 
     // activated empty hand on pickup-able object
-    public Transform PickupNutrient(Nutrient nutrient)
+    public Transform PickupNutrient(int nutrient)
     {
-        heldNutrientIndex = 0;
-        for(int i = 0; i < NUTRIENTS.Length; i++)
-        {
-            if (NUTRIENTS[i] == nutrient)
-            {
-                heldNutrientIndex = i; 
-                break;
-            }
-        }
-
-        return Instantiate(nutrientPrefab);
+        heldNutrientIndex = nutrient;
+        var prefab = Instantiate(nutrientPrefab);
+        prefab.tag = "Untagged";
+        return prefab;
     }
 
     // activated empty hand on pickup-able object
-    public Transform PickupSoil(Soil soil)
+    public Transform PickupSoil(int soil)
     {
-        heldSoilIndex = 0;
-
-        for(int i = 0; i < SOILS.Length; i++)
-        {
-            if (SOILS[i] == soil)
-            {
-                heldSoilIndex = i; 
-                break;
-            }
-        }
-
-        return Instantiate(soilPrefab);
+        heldSoilIndex = soil;
+        var prefab = Instantiate(soilPrefab);
+        prefab.tag = "Untagged";
+        return prefab;
     }
 
     // activate soil on slot with different soil

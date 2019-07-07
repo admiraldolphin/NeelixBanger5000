@@ -188,13 +188,14 @@ public class Kes: MonoBehaviour
                         SlotInteract(slot);
                         break;
 
-                    case "Nutrient":
-                        Nutrient nutrient = NutrientAtPosition(hit); 
+                    case "NutrientRack":
+                        int nutrient = NutrientAtPosition(hit); 
 
                         if (heldObject == HeldObject.none)
                         {
                             PickUpNutrient(nutrient);
                             heldObject = HeldObject.nutrient;
+                            return;
                         }
 
                         if(heldObject == HeldObject.nutrient)
@@ -204,14 +205,15 @@ public class Kes: MonoBehaviour
                         }
                         break;
 
-                    case "Soil":
-                        Soil soil = SoilAtPosition(hit); 
+                    case "SoilRack":
+                        int soil = SoilAtPosition(hit); 
 
                         if (heldObject == HeldObject.none)
                         {
                             PickUpSoil(soil);
                             heldObject = HeldObject.soil;
-                        }  
+                            return;
+                        }
 
                         if (heldObject == HeldObject.soil)
                         {
@@ -246,7 +248,7 @@ public class Kes: MonoBehaviour
 
         if (Physics.Raycast(laser, out hit, grabDistance))
         {
-            if (hit.collider.tag == "Plant" || hit.collider.tag == "Slot")
+            if (hit.collider.tag == "Plant" || hit.collider.tag == "Slot" || hit.collider.tag == "NutrientRack" || hit.collider.tag == "SoilRack")
             {
                 return hit.collider.tag;
             }
@@ -265,14 +267,16 @@ public class Kes: MonoBehaviour
         return levelGod.SlotWithPlant(plant.index);
     }
 
-    private Nutrient NutrientAtPosition(RaycastHit hit)
+    private int NutrientAtPosition(RaycastHit hit)
     {
-        return hit.transform.GetComponent<Nutrient>();
+        var bag = hit.transform.GetComponent<NutrientBag>();
+        return bag.contents;
     }
 
-    private Soil SoilAtPosition(RaycastHit hit)
+    private int SoilAtPosition(RaycastHit hit)
     {
-        return hit.transform.GetComponent<Soil>();
+        var bag = hit.transform.GetComponent<SoilBag>();
+        return bag.contents;
     }
 
     private void PickUpPlantFromSlot(Slot slot)
@@ -296,7 +300,7 @@ public class Kes: MonoBehaviour
         holding = null;
     }
 
-    private void PickUpNutrient(Nutrient nutrient)
+    private void PickUpNutrient(int nutrient)
     {
         // just hide the sprite of that kind of nutrient in the scene
         // appear another one in-hand
@@ -304,16 +308,17 @@ public class Kes: MonoBehaviour
         thing.parent = null;
         thing.position = arms.position;
         thing.SetParent(arms);
+        holding = thing;
     }
 
     private void PutDownNutrient()
     {
         // just un-hide the sprite of that kind of nutrient in the scene
         // disappear the ther one in-hand   
-        Destroy(holding);
+        Destroy(holding.gameObject);
     }
 
-    private void PickUpSoil(Soil soil)
+    private void PickUpSoil(int soil)
     {
         // just hide the sprite of that kind of soil in the scene
         // appear another one in-hand
@@ -321,11 +326,12 @@ public class Kes: MonoBehaviour
         thing.parent = null;
         thing.position = arms.position;
         thing.SetParent(arms);
+        holding = thing;
     }
 
     private void PutDownSoil()
     {
         // disappear the other one in-hand
-        Destroy(holding);
+        Destroy(holding.gameObject);
     }
 }

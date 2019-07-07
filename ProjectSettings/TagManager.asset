@@ -7,6 +7,8 @@ TagManager:
   - Plant
   - Shelf
   - Slot
+  - NutrientRack
+  - SoilRack
   layers:
   - Default
   - TransparentFX
