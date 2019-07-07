@@ -107,7 +107,7 @@ public class Kes: MonoBehaviour
 
     private void HandleClick()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             Ray laser = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
