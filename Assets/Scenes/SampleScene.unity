@@ -1012,6 +1012,8 @@ MonoBehaviour:
   soilPrefab: {fileID: 691853714}
   nutrientPrefab: {fileID: 1804795289}
   spawnSlot: {fileID: 864630938}
+  sick: {r: 0.6698113, g: 0.35797963, b: 0.022116425, a: 1}
+  dead: {r: 0.3490566, g: 0.3490566, b: 0.3490566, a: 1}
   UI: {fileID: 30448607}
   plantPrefab: {fileID: 2689758954416638004, guid: c5894b8bf305042f4a925afd38ef1632,
     type: 3}
@@ -2573,7 +2575,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2045526920}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: -5.81, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 963194228}

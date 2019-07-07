@@ -25,6 +25,9 @@ public class LevelGod: MonoBehaviour
     private int heldNutrientIndex = -1;
     private int heldSoilIndex = -1;
 
+    public Color sick = Color.red;
+    public Color dead = Color.black;
+
     // == GAME SETUP AND LOGISTICS ==
 
     public GameObject UI;
@@ -78,7 +81,17 @@ public class LevelGod: MonoBehaviour
             if (!plantIsWell)
             {
                 Debug.Log($"Plant {plant.index} has worsened");
-                // TODO: UpdateSprite(plant); // value asset brown/black as per state if unwell
+                var renderer = plant.GetComponentInChildren<MeshRenderer>();
+                renderer.material.color = sick;
+
+                if (!plant.isAlive)
+                {
+                    renderer.material.color = dead;
+                }
+                else
+                {
+                    renderer.material.color = sick;
+                }
             }
         }
     }
@@ -155,6 +168,7 @@ public class LevelGod: MonoBehaviour
             {
                 Debug.Log($"Plant {plant.index} has been nourished.");
                 // TODO: UpdateSprite(plant); // value asset un-brown if was brown
+                plant.GetComponent<MeshRenderer>().material.color = plant.healthyColor;
             }
         }
 
