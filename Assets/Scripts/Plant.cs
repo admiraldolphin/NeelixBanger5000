@@ -128,7 +128,6 @@ public class Plant: MonoBehaviour
         Debug.Log($"Plant {index} did not like the change.");
         return correctEnvironment;
     }
-    
     public PlantDecalSet plantDecalSet;
 
     private void Awake() 
