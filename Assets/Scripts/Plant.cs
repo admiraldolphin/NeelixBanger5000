@@ -155,8 +155,6 @@ public class Plant: MonoBehaviour
         {
             spawner.SpawnObject(decal, decalColor);
         }
-
-        this.transform.rotation = Quaternion.Euler(-90,Random.Range(0,360),0);
     }
 
     // discover new property of plant
