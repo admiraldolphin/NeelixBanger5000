@@ -64,11 +64,14 @@ public class Kes: MonoBehaviour
             Time.fixedDeltaTime = 0.02f * Time.timeScale; // setting fixedtime to still be 50fps, right?
         }
         
+        Vector3 rotation = Vector3.zero;
         Vector3 moveDirection = Vector3.zero;
         if (controller.isGrounded)
         {
-            moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
+            rotation = rotation = new Vector3(0, Input.GetAxisRaw("Horizontal") * 180 * Time.deltaTime, 0);
+            moveDirection = new Vector3(0, 0.0f, Input.GetAxis("Vertical"));
             moveDirection *= movementSpeed;
+            transform.Rotate(rotation);
         }
 
         // Apply gravity. Gravity is multiplied by deltaTime twice (once here, and once below
