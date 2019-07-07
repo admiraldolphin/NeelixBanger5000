@@ -2,16 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum HeldObject { nutrient, plant, soil, none };
+
 public class Kes: MonoBehaviour
 {
     public float movementSpeed = 1;
     public float gravity = 20;
     public float grabDistance = 2;
+
+    //==================================================================================
     public Transform arms;
     public Transform holding;
+    //==================================================================================
+
     public LevelGod levelGod;
 
     public Transform[] armModels;
+    public HeldObject heldObject = HeldObject.none;
 
     private CharacterController controller;
 
@@ -105,9 +112,43 @@ public class Kes: MonoBehaviour
         }
     }
 
+    private void SlotInteract(Slot slot)
+    {
+        if (heldObject == HeldObject.plant && !slot.hasPlant)
+        {
+            PlacePlantOnSlot(slot);
+            levelGod.PlacePlant(slot);
+            heldObject = HeldObject.none;
+        }
+
+        if (slot.hasPlant)
+        {
+            if (heldObject == HeldObject.none)
+            {
+                PickUpPlantFromSlot(slot);
+                levelGod.PickupPlant(slot);
+                heldObject = HeldObject.plant;
+            }    
+
+            if (heldObject == HeldObject.soil)
+            {
+                PutDownSoil();
+                levelGod.ChangeSoil(slot);
+                heldObject = HeldObject.none;
+            }
+                
+            if (heldObject == HeldObject.nutrient)
+            {
+                PutDownNutrient();
+                levelGod.FeedPlant(slot);
+                heldObject = HeldObject.none;
+            }
+        }
+    }
+
     private void HandleClick()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyUp(KeyCode.E))
         {
             Ray laser = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -116,36 +157,58 @@ public class Kes: MonoBehaviour
                 switch (hit.collider.tag)
                 {
                     case "Plant":
-                        if (holding == null)
-                        {
-                            PickUpPlant(hit);
-                        }
-                        else
-                        {
-                            DropPlant();
-                            if (hit.transform != holding)// is it a different plant?
-                            {
-                                PickUpPlant(hit);
-                            }
-                        }
+                        Slot pSlot = SlotAtPlantPosition(hit);
+                        SlotInteract(pSlot);
                         break;
-                    
-                    case "Shelf":
-                        PlacePlantOnShelf(hit);
-                        break;
-                    
+
                     case "Slot":
-                        PlacePlantOnSlot(hit);
+                        Slot slot = SlotAtPosition(hit);
+                        SlotInteract(slot);
+                        break;
+
+                    case "Nutrient":
+                        Nutrient nutrient = NutrientAtPosition(hit); 
+
+                        if (heldObject == HeldObject.none)
+                        {
+                            PickUpNutrient(nutrient);
+                            heldObject = HeldObject.nutrient;
+                        }
+
+                        if(heldObject == HeldObject.nutrient)
+                        {
+                            PutDownNutrient();
+                            heldObject = HeldObject.none;
+                        }
+                        break;
+
+                    case "Soil":
+                        Soil soil = SoilAtPosition(hit); 
+
+                        if (heldObject == HeldObject.none)
+                        {
+                            PickUpSoil(soil);
+                            heldObject = HeldObject.soil;
+                        }  
+
+                        if (heldObject == HeldObject.soil)
+                        {
+                            PutDownSoil();
+                            heldObject = HeldObject.none;
+                        }  
+                        break;
+
+                    case "Workstation":
+                        if (heldObject == HeldObject.plant)
+                        {
+                            levelGod.ExaminePlantWithWorkstation();
+                        }
                         break;
 
                     default:
-                        Debug.Log("shitballs");
+                        Debug.Log("Attempting interaction with unknown object.");
                         break;
                 }
-            }
-            else
-            {
-                DropPlant();
             }
         }
     }
@@ -175,60 +238,77 @@ public class Kes: MonoBehaviour
         return null;
     }
 
-    private void PickUpPlant(RaycastHit hit)
+    private Slot SlotAtPosition(RaycastHit hit)
     {
-        hit.transform.position = arms.position;
-        hit.transform.parent = null;
-        hit.transform.parent = arms;
-        hit.transform.GetComponent<Rigidbody>().isKinematic = true;
+        return hit.transform.GetComponent<Slot>();
+    }
+    private Slot SlotAtPlantPosition(RaycastHit hit)
+    {
         var plant = hit.transform.GetComponent<Plant>();
-
-        levelGod.PickupPlant(plant);
-
-        holding = hit.transform;
+        return levelGod.SlotWithPlant(plant.index);
     }
-    private void DropPlant()
+
+    private Nutrient NutrientAtPosition(RaycastHit hit)
     {
-        if (holding != null)
-        {
-            holding.rotation = Quaternion.identity;
-            holding.GetComponent<Rigidbody>().isKinematic = false;
-            var plant = holding.GetComponent<Plant>();
-            levelGod.DropPlant(plant.index);
-            holding.parent = null;
-            holding = null;
-        }
+        return hit.transform.GetComponent<Nutrient>();
     }
-    private void PlacePlantOnShelf(RaycastHit hit)
-    {
-        if (holding != null)
-        {
-            var shelf = hit.transform.GetComponent<Shelf>();
-            var plant = holding.GetComponent<Plant>();
-            
-            var slot = shelf.AvailableSpot(holding);
-            if (levelGod.PlacePlant(slot, plant.index))
-            {
-                shelf.PlacePlant(holding, slot);
 
-                holding = null;
-            }
-        }
+    private Soil SoilAtPosition(RaycastHit hit)
+    {
+        return hit.transform.GetComponent<Soil>();
     }
-    private void PlacePlantOnSlot(RaycastHit hit)
+
+    private void PickUpPlantFromSlot(Slot slot)
     {
-        if (holding != null) // we want to put the plant on that slot
-        {
-            var plant = holding.GetComponent<Plant>();
-            var slot = hit.transform.GetComponent<Slot>();
+        // TODO: if plant is child of slot in the scene, then we don't need to ray hit plant to
+        // know which plant is in that slot. We can get just get slot.child?
+        Plant plant = levelGod.plants[slot.plantIndex];
+        plant.transform.position = arms.position;
+        plant.transform.parent = null;
+        plant.transform.parent = arms;
+        plant.transform.GetComponent<Rigidbody>().isKinematic = true;
 
-            if (levelGod.PlacePlant(slot, plant.index))
-            {
-                holding.parent = null;
-                hit.transform.parent.GetComponent<Shelf>().PlacePlant(holding, slot);
+        holding = plant.transform;
+    }
 
-                holding = null;
-            }
-        }
+    private void PlacePlantOnSlot(Slot slot)
+    {
+        holding.transform.parent = null;
+        slot.transform.parent.GetComponent<Shelf>().PlacePlant(holding, slot);
+
+        holding = null;
+    }
+
+    private void PickUpNutrient(Nutrient nutrient)
+    {
+        // just hide the sprite of that kind of nutrient in the scene
+        // appear another one in-hand
+        var thing = levelGod.PickupNutrient(nutrient);
+        thing.parent = null;
+        thing.position = arms.position;
+        thing.SetParent(arms);
+    }
+
+    private void PutDownNutrient()
+    {
+        // just un-hide the sprite of that kind of nutrient in the scene
+        // disappear the ther one in-hand   
+        Destroy(holding);
+    }
+
+    private void PickUpSoil(Soil soil)
+    {
+        // just hide the sprite of that kind of soil in the scene
+        // appear another one in-hand
+        var thing = levelGod.PickupSoil(soil);
+        thing.parent = null;
+        thing.position = arms.position;
+        thing.SetParent(arms);
+    }
+
+    private void PutDownSoil()
+    {
+        // disappear the other one in-hand
+        Destroy(holding);
     }
 }

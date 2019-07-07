@@ -2,10 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelGod : MonoBehaviour
+public class LevelGod: MonoBehaviour
 {
+    public float TICK_RATE = 2;
+    Nutrient[] NUTRIENTS = (Nutrient[])System.Enum.GetValues(typeof(Nutrient));
+    Soil[] SOILS = (Soil[])System.Enum.GetValues(typeof(Soil));
+
     public Slot[] slots;
     public List<Plant> plants = new List<Plant>();
+    public List<int> missedPlantIDs = new List<int>(); // mitigate sparse array from removals
+
+    public Transform soilPrefab;
+    public Transform nutrientPrefab;
+
+    public Slot spawnSlot;
+
+    // keeps track of time
+    float elapsed = 0;
+
+    // kepts tracking of player holding
+    private int heldPlantIndex = -1;
+    private int heldNutrientIndex = -1;
+    private int heldSoilIndex = -1;
+
+    // == GAME SETUP AND LOGISTICS ==
 
     public GameObject UI;
 
@@ -20,6 +40,7 @@ public class LevelGod : MonoBehaviour
             var slot = tags[i].GetComponent<Slot>();
             slots[i] = slot;
         }
+
         CreatePlant();
 
         UI.SetActive(false);
@@ -34,6 +55,45 @@ public class LevelGod : MonoBehaviour
         UI.SetActive(false);
     }
 
+    // Update is called once per frame
+    void Update()
+    {
+        elapsed += Time.deltaTime;
+
+        if (elapsed > TICK_RATE)
+        {
+            elapsed = 0;
+            Tick();
+        }
+    }
+
+    private void Tick()
+    {
+        foreach (var plant in plants)
+        {
+            bool plantIsWell = plant.PassTime();
+
+            if (!plantIsWell)
+            {
+                Debug.Log($"Plant {plant.index} has worsened");
+                // TODO: UpdateSprite(plant); // value asset brown/black as per state if unwell
+            }
+        }
+    }
+
+    public Slot SlotWithPlant(int plantIndex)
+    {
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i].plantIndex == plantIndex)
+            {
+                return slots[i];
+            }
+        }
+        return null;
+    }
+
+    // CHANGES TO BE MADE
     public Plant plantPrefab;
     public void CreatePlant()
     {
@@ -42,185 +102,120 @@ public class LevelGod : MonoBehaviour
         // plants will start just off by themselves I guess?
         // sure why not
         // later need to start them somewhere a bit more meaningful
-        var plant = Instantiate(plantPrefab, transform.position, Quaternion.identity);
-        var index = plants.Count;
-        plant.index = index;
+        var position = spawnSlot.transform.position;
+        position.y += 1;
+        var plant = Instantiate(plantPrefab, position, Quaternion.identity);
+
+        if (missedPlantIDs.Count != 0)
+        {
+            plant.index = missedPlantIDs[0];
+            missedPlantIDs.RemoveAt(0);
+        } 
+        else
+        {
+            plant.index = plants.Count;
+        }
+        spawnSlot.plantIndex = plant.index;
+        
         plants.Add(plant);
     }
 
-    private List<Change> changeList = new List<Change>();
-    private void FlagChanges(Change[] changes)
+    // == PLAYER ACTIONS ==
+
+    // activated empty hand on non-empty slot
+    public void PickupPlant(Slot slot)
     {
-        changeList.AddRange(changes);
+        Plant plant = plants[slot.plantIndex];
+        heldPlantIndex = plant.index;
+        slot.RemovePlant(plant);
     }
-    private void FlagChange(Change change)
+    
+    // activated plant-holding hand on empty slot
+    public void PlacePlant(Slot slot)
     {
-        changeList.Add(change);
-    }
-
-    private void Tick()
-    {
-        Debug.Log($"There are {changeList.Count} changes to be processed");
-
-        // processing each change
-        while (changeList.Count > 0)
-        {
-            var change = changeList[0];
-
-            Change[] result = null;
-            if (change.group == ChangeGroup.plant)
-            {
-                result = plants[change.toIndex].ProcessChange(change);
-            }
-            else
-            {
-                result = slots[change.toIndex].ProcessChange(change);
-            }
-
-            if (result != null && result.Length > 0)
-            {
-                FlagChanges(result);
-            }
-            changeList.RemoveAt(0);
-        }
-        changeList.Clear();// in theory they are all gone by now but it never hurts to make sure
+        Plant plant = plants[heldPlantIndex];
+        heldPlantIndex = -1;
+        slot.PlacePlant(plant);
     }
 
-    // flagging changes for the plant now having been added to the slot
-    private void PlantedChanges(Slot slot)
+    // activated food-holding hand on non-empty slot
+    public void FeedPlant(Slot slot)
     {
-        Debug.Log($"{slot.name} holds plant {plants[slot.plant].name}");
-
-        var index = -1;
-        for(int i = 0; i < slots.Length; i++)
+        Plant plant = plants[slot.plantIndex];
+        if (plant.isAlive)
         {
-            if (slot == slots[i])
+            Nutrient nutrient = NUTRIENTS[heldNutrientIndex];
+            bool acceptedNutrient = plant.FeedNutrient(nutrient);
+
+            if (acceptedNutrient)
             {
-                index = i;
-            }
-        }
-        if (index == -1)
-        {
-            Debug.Log("invalid index");
-            return;
-        }
-
-        var changes = slot.changes;
-        for (int j = 0; j < changes.Length; j++)
-        {
-            changes[j].fromIndex = index;
-        }
-        FlagChanges(changes);
-    }
-
-    public void PickupPlant(Plant plant)
-    {
-        Debug.Log("picked up plant");
-
-        // go through the slots and find the plants owner
-        // squish that out
-        foreach (var slot in slots)
-        {
-            if (slot.plant == plant.index)
-            {
-                slot.plant = -1;
+                Debug.Log($"Plant {plant.index} has been nourished.");
+                // TODO: UpdateSprite(plant); // value asset un-brown if was brown
             }
         }
 
-        // also pin the plant to your arms now
-        // or should that remain the job of Kes?
+        heldNutrientIndex = -1;
+        // TODO: disappear model to represent it being used up
     }
-    public void KillPlant(Plant plant)
+
+    // activated plant-holding hand on workstation
+    public void ExaminePlantWithWorkstation()
+    {
+        Plant plant = plants[heldPlantIndex];
+        plant.DiscoverProperty();
+        // TODO: Unhide a post-it asset;
+    }
+
+    // activated plant-holding hand on incinerator
+    public void DestroyPlant(Plant plant)
     {
         // to kill something we just remove it from the mappings and then remove the gameobject
-        // this does mean the plants list will evetually just fill up with nothin
-        // that feels ok to me
-        foreach (var slot in slots)
+        missedPlantIDs.Add(plant.index);
+        Destroy(plant);
+        // animate incinerator?
+    }
+
+    // activated empty hand on pickup-able object
+    public Transform PickupNutrient(Nutrient nutrient)
+    {
+        heldNutrientIndex = 0;
+        for(int i = 0; i < NUTRIENTS.Length; i++)
         {
-            if (slot.plant == plant.index)
+            if (NUTRIENTS[i] == nutrient)
             {
-                slot.plant = -1;
+                heldNutrientIndex = i; 
+                break;
             }
         }
 
-        Destroy(plant);
+        return Instantiate(nutrientPrefab);
     }
-    public bool PlacePlant(Slot slot, int plant)
+
+    // activated empty hand on pickup-able object
+    public Transform PickupSoil(Soil soil)
     {
-        if (slot.plant != -1)
+        heldSoilIndex = 0;
+
+        for(int i = 0; i < SOILS.Length; i++)
         {
-            return false;
+            if (SOILS[i] == soil)
+            {
+                heldSoilIndex = i; 
+                break;
+            }
         }
-        slot.plant = plant;
-        Debug.Log("Placed plants");
-        PlantedChanges(slot);
-        return true;
-    }
-    public void DropPlant(int plant)
-    {
-        Debug.Log($"Dropping the plant at {plant}");
+
+        return Instantiate(soilPrefab);
     }
 
-    float elapsed = 0;
-    public float TickRate = 2;
-    // Update is called once per frame
-    void Update()
+    // activate soil on slot with different soil
+    public void ChangeSoil(Slot slot)
     {
-        elapsed += Time.deltaTime;
+        Plant plant = plants[slot.plantIndex];
+        Soil soil = SOILS[heldSoilIndex];
 
-        if (elapsed > TickRate)
-        {
-            elapsed = 0;
-            Tick();
-        }
-    }
-}
-
-public enum Atmosphere { air, weird }
-public enum Soil { dirt, ash }
-public enum Temperature {moderate, cold, hot}
-
-public enum ChangeType {atmosphere, soil, temperature}
-public enum ChangeGroup {slot, plant}
-public class Change
-{
-    public ChangeType type = ChangeType.atmosphere;
-    public ChangeGroup group = ChangeGroup.plant;
-    public int toIndex = 0; // the index of what is to accept the change
-    public int fromIndex = 0; // the index of what has made the change
-    
-    // these are the defaults
-    public Atmosphere atmosphere = Atmosphere.air;
-    public Soil soil = Soil.dirt;
-    public Temperature temperature = Temperature.moderate;
-
-    public static Change AtmosphereChange(int toIndex, Atmosphere modification)
-    {
-        var change = new Change();
-        change.type = ChangeType.atmosphere;
-        change.atmosphere = modification;
-        change.toIndex = toIndex;
-
-        return change;
-    }
-
-    public static Change SoilChange(int toIndex, Soil modification)
-    {
-        var change = new Change();
-        change.type = ChangeType.soil;
-        change.soil = modification;
-        change.toIndex = toIndex;
-
-        return change;
-    }
-
-    public static Change TemperatureChange(int toIndex, Temperature modification)
-    {
-        var change = new Change();
-        change.type = ChangeType.temperature;
-        change.temperature = modification;
-        change.toIndex = toIndex;
-
-        return change;
+        plant.ChangeSoil(soil, slot);
+        heldSoilIndex = -1;
+        // TODO: disappear model to represent it being used up
     }
 }

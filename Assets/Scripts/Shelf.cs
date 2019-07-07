@@ -51,8 +51,10 @@ public class Shelf: MonoBehaviour
         position.y += 0.5f;
         plant.position = position;
         plant.rotation = Quaternion.identity;
-        //plant.parent = null;
-        plant.SetParent(slot.transform,true);
+
+        plant.parent = null;
+        //plant.parent = slot.transform;
+        plant.SetParent(slot.transform);
         Debug.Log($"parent: {plant.transform.parent.name}");
     }
 

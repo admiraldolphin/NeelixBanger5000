@@ -2,82 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Slot : MonoBehaviour
+public class Slot: MonoBehaviour
 {
-    // this is the index of the plant in the plants list on levelgod
-    public int plant = -1;
+    // the index of the plant occupying the slot
+    public int plantIndex = -1;
 
-    // the default slot type, designed to be overwritten
-    public Atmosphere atmosphere = Atmosphere.air;
-    public Soil soil = Soil.dirt;
+    // default settings for slots
+    public Atmosphere atmosphere = Atmosphere.oxygen;
     public Temperature temperature = Temperature.moderate;
+    public LightLevel lightLevel = LightLevel.normal;
+
+    // == COMPUTED PROPERTIES ==
 
     public bool hasPlant
     {
-        get
-        {
-            return plant != -1;
-        }
+        get { return (plantIndex != -1); }
     }
 
-    public Change[] ProcessChange(Change change)
+    public void PlacePlant(Plant plant)
     {
-        List<Change> changes = new List<Change>();
-        switch (change.type)
-        {
-            case ChangeType.atmosphere:
-                var atmosChange = Change.AtmosphereChange(plant, change.atmosphere);
-                atmosChange.fromIndex = change.toIndex;
-                changes.Add(atmosChange);
-                Debug.Log("atmos change on slot");
-
-                atmosphere = change.atmosphere;
-                break;
-            
-            case ChangeType.soil:
-                var soilChange = Change.SoilChange(plant, change.soil);
-                soilChange.fromIndex = change.toIndex;
-                changes.Add(soilChange);
-                Debug.Log("soil change on slot");
-
-                soil = change.soil;
-                break;
-            
-            case ChangeType.temperature:
-                var temperatureChange = Change.TemperatureChange(plant, change.temperature);
-                temperatureChange.fromIndex = change.toIndex;
-                changes.Add(temperatureChange);
-                Debug.Log("temp change on slot");
-
-                temperature = change.temperature;
-                break;
-        }
-
-        return changes.ToArray();
+        plant.PutDown(this);
+        plantIndex = plant.index;
+        Debug.Log($"Plant {plant.index} placed in slot {name}");
     }
 
-    // fuck this is terrible...
-    public Change[] changes
+    public void RemovePlant(Plant plant)
     {
-        get
-        {
-            var atmosChange = new Change();
-            atmosChange.type = ChangeType.atmosphere;
-            atmosChange.atmosphere = atmosphere;
-            atmosChange.toIndex = plant;
-
-            var soilChange = new Change();
-            soilChange.type = ChangeType.soil;
-            soilChange.soil = soil;
-            soilChange.toIndex = plant;
-
-            var temperatureChange = new Change();
-            temperatureChange.type = ChangeType.temperature;
-            temperatureChange.temperature = temperature;
-            temperatureChange.toIndex = plant;
-
-            Change[] changes = {atmosChange, soilChange, temperatureChange};
-            return changes;
-        }
+        plant.PickUp();
+        plantIndex = -1;
+        Debug.Log($"Plant {plant.index} removed from slot {name}");
     }
 }
