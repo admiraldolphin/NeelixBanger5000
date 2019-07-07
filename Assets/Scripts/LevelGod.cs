@@ -93,6 +93,7 @@ public class LevelGod: MonoBehaviour
                 }
             }
         }
+        CreatePlant();
     }
 
     public Slot SlotWithPlant(int plantIndex)
@@ -116,14 +117,16 @@ public class LevelGod: MonoBehaviour
         // plants will start just off by themselves I guess?
         // sure why not
         // later need to start them somewhere a bit more meaningful
-        var position = spawnSlot.transform.position;
-        position.y += 1;
-        var plant = Instantiate(plantPrefab, position, Quaternion.identity);
+        if (!spawnSlot.hasPlant)
+        {
+            var position = spawnSlot.transform.position;
+            var plant = Instantiate(plantPrefab, position, Quaternion.identity);
 
-        plant.index = plants.Count;
-        spawnSlot.plantIndex = plant.index;
-        
-        plants.Add(plant);
+            plant.index = plants.Count;
+            spawnSlot.plantIndex = plant.index;
+            
+            plants.Add(plant);
+        }
     }
 
     // == PLAYER ACTIONS ==
