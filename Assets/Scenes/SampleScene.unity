@@ -392,8 +392,8 @@ MonoBehaviour:
   missedPlantIDs: 
   soilPrefab: {fileID: 0}
   nutrientPrefab: {fileID: 0}
-  spawnSlot: {fileID: 0}
-  UI: {fileID: 864630933}
+  spawnSlot: {fileID: 864630938}
+  UI: {fileID: 30448607}
   plantPrefab: {fileID: 2689758954416638004, guid: c5894b8bf305042f4a925afd38ef1632,
     type: 3}
 --- !u!4 &435711568
@@ -656,9 +656,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Press E to Water
-
-    Press F to Glare At'
+  m_Text: Press E to pick up
 --- !u!222 &782992545
 CanvasRenderer:
   m_ObjectHideFlags: 0

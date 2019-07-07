@@ -87,19 +87,40 @@ public class Kes: MonoBehaviour
 
         HandleClick();
 
-        var hoveredPlant = ShowUI();
-        if (hoveredPlant != null)
+
+        var interacting = CheckUI();
+
+        if (interacting != null)
         {
             needToShowArms = true;
-            // handle the button interaction in here
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                Debug.Log("You water the plant");
-            }
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                Debug.Log("You glare at the plant");
-            }
+        }
+
+        switch (heldObject)
+        {
+            case HeldObject.nutrient:
+                if(interacting == "Slot")
+                {
+                    levelGod.ShowUI("Press 'E' to use");
+                }
+                break;
+            case HeldObject.soil:
+                if(interacting == "Slot")
+                {
+                    levelGod.ShowUI("Press 'E' to use");
+                }
+                break;
+            case HeldObject.plant:
+                if(interacting == "Slot")
+                {
+                    levelGod.ShowUI("Press 'E' to put down");
+                }
+                break;
+            case HeldObject.none:
+                if (interacting == "Plant")
+                {
+                    levelGod.ShowUI("Press 'E' to pick up");
+                }
+                break;
         }
 
         if (needToShowArms)
@@ -218,23 +239,18 @@ public class Kes: MonoBehaviour
     // and the cursor is over the top
     // then show the UI for it
     // returns the plant it is over if it is over one
-    private Plant ShowUI()
+    private string CheckUI()
     {
         Ray laser = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
         if (Physics.Raycast(laser, out hit, grabDistance))
         {
-            if (hit.collider.tag == "Plant")
+            if (hit.collider.tag == "Plant" || hit.collider.tag == "Slot")
             {
-                var plant = hit.transform.GetComponent<Plant>();
-
-                // show the plant UI then
-                levelGod.ShowUI();
-                return plant;
+                return hit.collider.tag;
             }
         }
-
         levelGod.HideUI();
         return null;
     }

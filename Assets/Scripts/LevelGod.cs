@@ -46,8 +46,10 @@ public class LevelGod: MonoBehaviour
         UI.SetActive(false);
     }
 
-    public void ShowUI()
+    public void ShowUI(string message)
     {
+        var text = UI.GetComponentInChildren<UnityEngine.UI.Text>();
+        text.text = message;
         UI.SetActive(true);
     }
     public void HideUI()
