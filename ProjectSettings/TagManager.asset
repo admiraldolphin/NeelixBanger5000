@@ -9,6 +9,7 @@ TagManager:
   - Slot
   - NutrientRack
   - SoilRack
+  - Incinerator
   layers:
   - Default
   - TransparentFX

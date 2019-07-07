@@ -13,7 +13,7 @@ public class Plant: MonoBehaviour
     // == CONSTANT PROPERTIES ==
 
     const int HAPPINESS_THRESHOLD = 5; // how long a plant can be HAPPY without its needs met
-    const int LIVINGNESS_THRESHOLD = 6; // how long a plant can be ALIVE without its needs met
+    const int LIVINGNESS_THRESHOLD = 10; // how long a plant can be ALIVE without its needs met
 
     // default settings for plants
     public Atmosphere atmosphere = Atmosphere.oxygen;
@@ -80,9 +80,6 @@ public class Plant: MonoBehaviour
 
     public bool PassTime()
     {
-        bool plantIsHappy = isHappy;
-        bool plantIsAlive = isAlive;
-
         if (!correctEnvironment)
         {
             lastInCorrectEnvironment += 1;
@@ -90,7 +87,7 @@ public class Plant: MonoBehaviour
 
         lastFed += 1;
 
-        return (plantIsHappy == this.isHappy && plantIsAlive == this.isAlive);
+        return (isHappy && isAlive);
     }
 
     // plant was putDown() in new slot

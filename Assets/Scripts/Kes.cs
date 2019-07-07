@@ -114,6 +114,10 @@ public class Kes: MonoBehaviour
                 {
                     levelGod.ShowUI("Press 'E' to put down");
                 }
+                if (interacting == "Incinerator")
+                {
+                    levelGod.ShowUI("Press 'E' to INCINERATE!");
+                }
                 break;
             case HeldObject.none:
                 if (interacting == "Plant")
@@ -228,6 +232,15 @@ public class Kes: MonoBehaviour
                             levelGod.ExaminePlantWithWorkstation();
                         }
                         break;
+                    
+                    case "Incinerator":
+                        if (heldObject == HeldObject.plant)
+                        {
+                            levelGod.DestroyPlant(holding);
+                            holding = null;
+                            heldObject = HeldObject.none;
+                        }
+                        break;
 
                     default:
                         Debug.Log("Attempting interaction with unknown object.");
@@ -248,7 +261,7 @@ public class Kes: MonoBehaviour
 
         if (Physics.Raycast(laser, out hit, grabDistance))
         {
-            if (hit.collider.tag == "Plant" || hit.collider.tag == "Slot" || hit.collider.tag == "NutrientRack" || hit.collider.tag == "SoilRack")
+            if (hit.collider.tag == "Plant" || hit.collider.tag == "Slot" || hit.collider.tag == "NutrientRack" || hit.collider.tag == "SoilRack" || hit.collider.tag == "Incinerator")
             {
                 return hit.collider.tag;
             }

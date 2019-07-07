@@ -10,7 +10,6 @@ public class LevelGod: MonoBehaviour
 
     public Slot[] slots;
     public List<Plant> plants = new List<Plant>();
-    public List<int> missedPlantIDs = new List<int>(); // mitigate sparse array from removals
 
     public Transform soilPrefab;
     public Transform nutrientPrefab;
@@ -121,15 +120,7 @@ public class LevelGod: MonoBehaviour
         position.y += 1;
         var plant = Instantiate(plantPrefab, position, Quaternion.identity);
 
-        if (missedPlantIDs.Count != 0)
-        {
-            plant.index = missedPlantIDs[0];
-            missedPlantIDs.RemoveAt(0);
-        } 
-        else
-        {
-            plant.index = plants.Count;
-        }
+        plant.index = plants.Count;
         spawnSlot.plantIndex = plant.index;
         
         plants.Add(plant);
@@ -185,10 +176,11 @@ public class LevelGod: MonoBehaviour
     }
 
     // activated plant-holding hand on incinerator
-    public void DestroyPlant(Plant plant)
+    public void DestroyPlant(Transform trans)
     {
         // to kill something we just remove it from the mappings and then remove the gameobject
-        missedPlantIDs.Add(plant.index);
+        Plant plant = trans.GetComponent<Plant>();
+        plants.RemoveAt(plant.index);
         Destroy(plant.gameObject);
         // animate incinerator?
     }
