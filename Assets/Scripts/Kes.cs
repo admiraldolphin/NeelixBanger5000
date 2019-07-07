@@ -119,6 +119,7 @@ public class Kes: MonoBehaviour
             PlacePlantOnSlot(slot);
             levelGod.PlacePlant(slot);
             heldObject = HeldObject.none;
+            return;
         }
 
         if (slot.hasPlant)
