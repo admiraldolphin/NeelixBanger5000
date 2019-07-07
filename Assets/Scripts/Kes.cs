@@ -69,9 +69,11 @@ public class Kes: MonoBehaviour
         if (controller.isGrounded)
         {
             rotation = rotation = new Vector3(0, Input.GetAxisRaw("Horizontal") * 180 * Time.deltaTime, 0);
+            transform.Rotate(rotation, Space.World);
+
             moveDirection = new Vector3(0, 0.0f, Input.GetAxis("Vertical"));
+            moveDirection = transform.TransformDirection(moveDirection);
             moveDirection *= movementSpeed;
-            transform.Rotate(rotation);
         }
 
         // Apply gravity. Gravity is multiplied by deltaTime twice (once here, and once below

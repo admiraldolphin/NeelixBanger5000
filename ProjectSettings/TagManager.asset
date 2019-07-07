@@ -10,6 +10,7 @@ TagManager:
   - NutrientRack
   - SoilRack
   - Incinerator
+  - Workstation
   layers:
   - Default
   - TransparentFX

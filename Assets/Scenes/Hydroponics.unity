@@ -120,6 +120,25 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &7507882 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 322f1a0d2496845bc806588ac5472e32,
+    type: 3}
+  m_PrefabInstance: {fileID: 280919071}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &7507883
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7507882}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.00011579841, y: 0.000895666, z: 0.0008956662}
+  m_Center: {x: -0.0000104711635, y: 4.2622048e-11, z: -0.00044783117}
 --- !u!4 &10085237 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: d106c5544090a454a9068b0fea56a2c4,
@@ -501,6 +520,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Table Long
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: a3c147e7f12654ab08e2b7dfb104fcab,
+        type: 3}
+      propertyPath: m_TagString
+      value: Workstation
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: a3c147e7f12654ab08e2b7dfb104fcab,
         type: 3}
@@ -936,6 +960,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Sticky Note 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 322f1a0d2496845bc806588ac5472e32,
+        type: 3}
+      propertyPath: m_TagString
+      value: Workstation
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 322f1a0d2496845bc806588ac5472e32,
         type: 3}
@@ -3440,6 +3469,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Monitor (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: aa33f5f5e620e4441abccfaaf1515b28,
+        type: 3}
+      propertyPath: m_TagString
+      value: Workstation
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: aa33f5f5e620e4441abccfaaf1515b28,
         type: 3}
@@ -6981,6 +7015,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Paper
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 55eb02f27aeac48c2a1af45e31a4c644,
+        type: 3}
+      propertyPath: m_TagString
+      value: Workstation
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 55eb02f27aeac48c2a1af45e31a4c644,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7474,6 +7513,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Keyboard (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 8ec46a696dca54f3abb424ff4535dcff,
+        type: 3}
+      propertyPath: m_TagString
+      value: Workstation
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 8ec46a696dca54f3abb424ff4535dcff,
         type: 3}
@@ -8830,16 +8874,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: 54a60f39fda814de0944bf6c6a25f6a1,
-        type: 3}
-      propertyPath: m_Name
-      value: Tray (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 54a60f39fda814de0944bf6c6a25f6a1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 54a60f39fda814de0944bf6c6a25f6a1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8894,6 +8928,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90.00001
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 54a60f39fda814de0944bf6c6a25f6a1,
+        type: 3}
+      propertyPath: m_Name
+      value: Tray (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 54a60f39fda814de0944bf6c6a25f6a1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54a60f39fda814de0944bf6c6a25f6a1, type: 3}
