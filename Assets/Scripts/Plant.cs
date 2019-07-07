@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum Atmosphere { oxygen, other }
 public enum Temperature { moderate, cold, hot }
-public enum Soil { dirt, ash, sand, mud, bonechar }
+public enum Soil { dirt, ash, sand, tar, bonechar }
 public enum LightLevel { normal, dark }
 public enum Nutrient { water, blood, acid }
 
