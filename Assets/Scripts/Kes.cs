@@ -175,7 +175,6 @@ public class Kes: MonoBehaviour
         hit.transform.GetComponent<Rigidbody>().isKinematic = true;
         var plant = hit.transform.GetComponent<Plant>();
 
-        levelGod.PickupPlant(plant);
         holding = hit.transform;
     }
 
@@ -188,7 +187,6 @@ public class Kes: MonoBehaviour
         hit.transform.parent.GetComponent<Shelf>().PlacePlant(holding, hit.transform);
         var slot = hit.transform.GetComponent<Slot>();
 
-        levelGod.PlacePlant(slot, plant.index);
         holding = null;
     }
 
@@ -200,7 +198,7 @@ public class Kes: MonoBehaviour
         // appear another one in-hand
     }
 
-    private void PutDownNutrient(RaycastHit hit)
+    private void PutDownNutrient(Nutrient nutrient)
     {
         // just un-hide the sprite of that kind of nutrient in the scene
         // disappear the ther one in-hand    

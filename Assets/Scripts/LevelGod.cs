@@ -136,7 +136,7 @@ public class LevelGod: MonoBehaviour
     public void ExaminePlantWithWorkstation()
     {
         Plant plant = plants[heldPlantIndex];
-        plant.DiscoverProperty()
+        plant.DiscoverProperty();
         // TODO: Unhide a post-it asset;
     }
 
