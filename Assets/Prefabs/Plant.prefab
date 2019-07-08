@@ -76,7 +76,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9783986d607e54e6ab949013f5edc29b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sickColor: {r: 1, g: 0, b: 0, a: 1}
+  sickColor: {r: 0.6698113, g: 0.31571296, b: 0, a: 1}
   deadColor: {r: 0, g: 0, b: 0, a: 1}
   traySoilRenderer: {fileID: 5908849937334357375}
   atmosphere: 0

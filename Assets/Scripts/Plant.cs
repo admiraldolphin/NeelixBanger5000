@@ -16,7 +16,7 @@ public class Plant: MonoBehaviour
     const int HAPPINESS_THRESHOLD = 10; // how long a plant can be HAPPY without its needs met
     const int LIVINGNESS_THRESHOLD = 20; // how long a plant can be ALIVE without its needs met
 
-    public Color sickColor = Color.red;
+    public Color sickColor = new Color(167f/255f,114f/255f,0f);
     public Color deadColor = Color.black;
 
     public MeshRenderer traySoilRenderer;
@@ -58,7 +58,7 @@ public class Plant: MonoBehaviour
     {
         get
         {
-            return (lastFed > HAPPINESS_THRESHOLD) && (lastInCorrectEnvironment > HAPPINESS_THRESHOLD); 
+            return (lastFed < HAPPINESS_THRESHOLD) && (lastInCorrectEnvironment < HAPPINESS_THRESHOLD); 
         }
     }
 

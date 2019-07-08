@@ -39,9 +39,10 @@
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            // Albedo comes from a texture tinted by color
+            // Read the incoming texture
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex);
 
+            // Alpha composite the texture over base colour
             fixed4 result = c * (c.a) + _Color * ( 1 - c.a);
 
             o.Albedo = result;
